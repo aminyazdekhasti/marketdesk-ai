@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MarketDeskAI</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B2447">
+<link rel="icon" href="icon-192.png">
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+:root{--navy:#0B2447;--navy-dark:#061733;--navy-light:#19376D;--gold:#D4A537;--gold-light:#E8C468;--green:#1F9D55;--red:#D64545;--bg:#F7F8FA;--surface:#FFF;--text:#0B2447;--text-soft:#4A5677;--border:#E3E6ED;--shadow:0 4px 20px rgba(11,36,71,.08)}
+[data-theme="dark"]{--bg:#101828;--surface:#1A2236;--text:#E6E8EC;--text-soft:#9AA3B8;--border:#2A3450;--shadow:0 4px 20px rgba(0,0,0,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Vazirmatn',Tahoma,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;font-size:15px;line-height:1.7}
+button,input,textarea,select{font-family:inherit;font-size:inherit}
+button{cursor:pointer;border:none}
+.splash{position:fixed;inset:0;background:linear-gradient(180deg,var(--navy-dark),var(--navy));display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s}
+.splash.hide{opacity:0;pointer-events:none}
+.splash h1{color:var(--gold);font-size:42px;font-weight:800}
+.splash p{color:#fff;margin-top:12px;opacity:.85}
+.login-page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:var(--bg)}
+.login-box{width:100%;max-width:380px;text-align:center}
+.login-box h1{color:var(--navy);font-size:32px;font-weight:800;margin-bottom:6px}
+[data-theme="dark"] .login-box h1{color:var(--gold)}
+.login-box .tagline{color:var(--text-soft);margin-bottom:40px}
+.btn-auth{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:52px;background:var(--navy);color:#fff;border-radius:14px;margin-bottom:12px;font-weight:600;transition:transform .15s,background .2s}
+.btn-auth:hover{background:var(--navy-light);transform:translateY(-1px)}
+.btn-auth.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--border)}
+[data-theme="dark"] .btn-auth.ghost{color:var(--text)}
+.login-footer{margin-top:40px;font-size:12px;color:var(--text-soft);opacity:.7}
+.app{display:none;min-height:100vh;flex-direction:column}
+.app.active{display:flex}
+header.topbar{background:var(--navy);color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
+[data-theme="dark"] header.topbar{background:var(--navy-dark)}
+.brand{font-weight:800;font-size:18px;color:var(--gold)}
+.brand small{display:block;color:#fff;font-size:11px;font-weight:400;opacity:.7}
+.theme-toggle{background:rgba(255,255,255,.15);color:#fff;width:40px;height:40px;border-radius:50%;font-size:18px}
+.modules{display:flex;gap:8px;overflow-x:auto;padding:14px 16px;background:var(--surface);border-bottom:1px solid var(--border);scrollbar-width:none}
+.modules::-webkit-scrollbar{display:none}
+.chip{white-space:nowrap;padding:8px 16px;border-radius:999px;background:transparent;color:var(--text-soft);border:1.5px solid var(--border);font-size:13px;font-weight:500;transition:all .2s}
+.chip.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+[data-theme="dark"] .chip.active{background:var(--gold);color:var(--navy-dark);border-color:var(--gold)}
+main.content{flex:1;padding:20px 16px 100px;max-width:720px;margin:0 auto;width:100%}
+.card{background:var(--surface);border-radius:20px;padding:20px;margin-bottom:14px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.card.navy{background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;border:none}
+.card.gold{background:linear-gradient(135deg,#FBF3DD,#F5E6B8);border:1px solid var(--gold)}
+[data-theme="dark"] .card.gold{background:linear-gradient(135deg,#2A2410,#1F1A0A)}
+.card.green{background:linear-gradient(135deg,#E4F5EA,#C9EBD6);border:1px solid var(--green)}
+[data-theme="dark"] .card.green{background:linear-gradient(135deg,#0F2A1C,#13321F)}
+.card.red{background:linear-gradient(135deg,#FBE5E5,#F5C9C9);border:1px solid var(--red)}
+[data-theme="dark"] .card.red{background:linear-gradient(135deg,#2A0F0F,#320F0F)}
+.card-title{font-size:13px;color:var(--text-soft);margin-bottom:8px}
+.card.navy .card-title{color:rgba(255,255,255,.7)}
+.card-value{font-size:26px;font-weight:800;color:var(--gold)}
+.card.navy .card-value{color:var(--gold)}
+.card-sub{font-size:12px;margin-top:6px;opacity:.8}
+.text-green{color:var(--green)}.text-red{color:var(--red)}
+.cmd-head{color:var(--navy);font-weight:700;margin-bottom:6px}
+[data-theme="dark"] .cmd-head{color:var(--gold)}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{background:var(--surface);border-radius:16px;padding:16px;border:1px solid var(--border);text-align:center}
+.stat .num{font-size:22px;font-weight:800;color:var(--navy)}
+[data-theme="dark"] .stat .num{color:var(--gold)}
+.stat .lbl{font-size:11px;color:var(--text-soft);margin-top:4px}
+.progress{height:8px;background:var(--border);border-radius:999px;overflow:hidden;margin-top:12px}
+.progress-bar{height:100%;background:var(--green);border-radius:999px;transition:width .4s}
+.progress-bar.warn{background:var(--red)}
+.asset-row{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--surface);border-radius:16px;border:1px solid var(--border);margin-bottom:8px;cursor:pointer;transition:transform .15s}
+.asset-row:hover{transform:translateX(-3px)}
+.asset-row .icon{width:40px;height:40px;border-radius:50%;background:rgba(212,165,55,.15);display:flex;align-items:center;justify-content:center;font-size:18px}
+.asset-info{flex:1}
+.asset-name{font-weight:700;font-size:15px}
+.asset-meta{font-size:12px;color:var(--text-soft);margin-top:2px}
+.asset-amount{background:rgba(212,165,55,.15);color:var(--navy);padding:6px 12px;border-radius:999px;font-weight:700;font-size:13px}
+[data-theme="dark"] .asset-amount{color:var(--gold)}
+.filters{display:flex;gap:8px;overflow-x:auto;margin-bottom:16px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 20px;border-radius:14px;background:var(--navy);color:#fff;font-weight:600;transition:all .2s}
+.btn:hover{background:var(--navy-light)}
+.btn.gold{background:var(--gold);color:var(--navy-dark)}
+.btn.ghost{background:transparent;color:var(--text);border:1.5px solid var(--border)}
+.btn.danger{background:var(--red);color:#fff}
+.btn.block{width:100%}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.small{padding:8px 14px;font-size:13px}
+.fab{position:fixed;bottom:24px;left:24px;width:56px;height:56px;border-radius:50%;background:var(--gold);color:var(--navy-dark);font-size:28px;font-weight:300;box-shadow:0 8px 24px rgba(212,165,55,.4);display:none;align-items:center;justify-content:center;z-index:50}
+.fab.active{display:flex}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
+.modal-bg.active{display:flex}
+.modal{background:var(--surface);border-radius:24px;padding:24px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto}
+.modal h2{margin-bottom:20px;color:var(--navy)}
+[data-theme="dark"] .modal h2{color:var(--gold)}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text-soft)}
+.field input,.field textarea,.field select{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);outline:none;transition:border-color .2s}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--gold)}
+.empty{text-align:center;padding:60px 20px;color:var(--text-soft)}
+.empty .big{font-size:48px;margin-bottom:12px;opacity:.5}
+.toast{position:fixed;bottom:30px;right:30px;background:var(--navy);color:#fff;padding:14px 22px;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.3);transform:translateY(100px);opacity:0;transition:all .3s;z-index:999;font-weight:500}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.gold{background:var(--gold);color:var(--navy-dark)}
+.placeholder-page{text-align:center;padding:80px 20px}
+.placeholder-page .ico{font-size:64px;margin-bottom:16px}
+.placeholder-page h2{color:var(--navy);margin-bottom:10px}
+[data-theme="dark"] .placeholder-page h2{color:var(--gold)}
+.placeholder-page p{color:var(--text-soft)}
+.chat-box{background:var(--surface);border-radius:20px;border:1px solid var(--border);padding:16px;height:420px;overflow-y:auto;margin-bottom:12px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:80%;padding:12px 16px;border-radius:16px;line-height:1.7;font-size:14px;white-space:pre-wrap}
+.msg.user{align-self:flex-start;background:var(--navy);color:#fff;border-bottom-right-radius:4px}
+[data-theme="dark"] .msg.user{background:var(--navy-light)}
+.msg.bot{align-self:flex-end;background:var(--bg);border:1px solid var(--border);border-bottom-left-radius:4px}
+.chat-input-row{display:flex;gap:8px}
+.chat-input-row input{flex:1;padding:14px;border-radius:14px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);outline:none}
+.chat-input-row input:focus{border-color:var(--gold)}
+.quick-questions{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none}
+.quick-questions::-webkit-scrollbar{display:none}
+.market-row{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--surface);border-radius:16px;border:1px solid var(--border);margin-bottom:8px}
+.market-row .icon{width:40px;height:40px;border-radius:50%;background:rgba(212,165,55,.15);display:flex;align-items:center;justify-content:center;font-size:20px}
+.market-info{flex:1}
+.signal{padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
+.signal.buy{background:rgba(31,157,85,.15);color:var(--green)}
+.signal.sell{background:rgba(214,69,69,.15);color:var(--red)}
+.signal.hold{background:rgba(74,86,119,.15);color:var(--text-soft)}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:180px;padding:16px 0;border-bottom:1px solid var(--border)}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{width:100%;background:linear-gradient(180deg,var(--gold),var(--gold-light));border-radius:8px 8px 0 0;transition:height .5s;min-height:6px}
+.bar-label{font-size:10px;color:var(--text-soft);text-align:center}
+.dist-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.dist-row:last-child{border-bottom:none}
+.dist-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-left:8px}
+.backup-list .btn{margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<div class="splash" id="splash">
+<h1>MarketDeskAI</h1>
+<p>دستیار هوشمند مدیریت ثروت</p>
+</div>
+
+<div class="login-page" id="loginPage">
+<div class="login-box">
+<h1>MarketDeskAI</h1>
+<p class="tagline">دستیار هوشمند مدیریت ثروت</p>
+<button class="btn-auth" onclick="enterApp()">🔐 ورود با Google</button>
+<button class="btn-auth" onclick="enterApp()">🔑 ورود با Passkey</button>
+<button class="btn-auth" onclick="enterApp()">👆 ورود با اثر انگشت</button>
+<button class="btn-auth ghost" onclick="enterApp()">👤 ورود به‌عنوان مهمان</button>
+<p class="login-footer">Amin Yazdkhasti · مالک و توسعه‌دهنده<br>تمام حقوق محفوظ است</p>
+</div>
+</div>
+
+<div class="app" id="app">
+<header class="topbar">
+<div class="brand">MarketDeskAI<small>دستیار هوشمند مدیریت ثروت</small></div>
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+</header>
+<div class="modules" id="modulesRow"></div>
+<main class="content" id="content"></main>
+</div>
+
+<button class="fab" id="fab" onclick="fabAction()">+</button>
+
+<div class="modal-bg" id="modalBg">
+<div class="modal">
+<h2 id="modalTitle">افزودن دارایی</h2>
+<div class="field"><label>نام دارایی</label><input type="text" id="fName" placeholder="طلا ۱۸ عیار"></div>
+<div class="field"><label>کلاس دارایی</label><select id="fClass"></select></div>
+<div class="field"><label>ارزش به تومان</label><input type="text" id="fAmount" inputmode="numeric"></div>
+<div class="field"><label>درصد تغییر ماهانه</label><input type="text" id="fChange" placeholder="4.3"></div>
+<div class="field"><label>یادداشت</label><textarea id="fNote" rows="3"></textarea></div>
+<button class="btn gold block" onclick="saveAsset()" style="margin-bottom:8px;">ذخیره</button>
+<button class="btn ghost block" onclick="closeAssetModal()">انصراف</button>
+</div>
+</div>
+
+<div class="modal-bg" id="budgetModalBg">
+<div class="modal">
+<h2 id="budgetModalTitle">افزودن دسته بودجه</h2>
+<div class="field"><label>نام دسته</label><input type="text" id="bName"></div>
+<div class="field"><label>سقف بودجه</label><input type="text" id="bCap" inputmode="numeric"></div>
+<div class="field"><label>مصرف‌شده</label><input type="text" id="bSpent" inputmode="numeric"></div>
+<button class="btn gold block" onclick="saveBudget()" style="margin-bottom:8px;">ذخیره</button>
+<button class="btn ghost block" onclick="closeBudgetModal()">انصراف</button>
+</div>
+</div>
+
+<div class="modal-bg" id="importModalBg">
+<div class="modal">
+<h2>بازیابی از فایل بکاپ</h2>
+<div class="field"><label>محتوای JSON</label><textarea id="importData" rows="8"></textarea></div>
+<button class="btn gold block" onclick="doImport()" style="margin-bottom:8px;">بازیابی</button>
+<button class="btn ghost block" onclick="document.getElementById('importModalBg').classList.remove('active')">انصراف</button>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const ASSET_CLASSES=[{key:"SALARY",fa:"حقوق",icon:"💼"},{key:"CRYPTO",fa:"ارز دیجیتال",icon:"₿"},{key:"IRAN_STOCK",fa:"بورس ایران",icon:"📈"},{key:"GLOBAL_STOCK",fa:"بورس جهانی",icon:"🌐"},{key:"FOREX",fa:"فارکس",icon:"💱"},{key:"ETF",fa:"ETF",icon:"📊"},{key:"GOLD",fa:"طلا",icon:"🥇"},{key:"SILVER",fa:"نقره",icon:"🥈"},{key:"BANK_DEPOSIT",fa:"سپرده بانکی",icon:"🏦"},{key:"CAR",fa:"خودرو",icon:"🚗"},{key:"LAND",fa:"زمین",icon:"🏞️"},{key:"DOLLAR",fa:"دلار",icon:"💵"},{key:"EURO",fa:"یورو",icon:"💶"}];
+const MODULES=[{key:"dashboard",fa:"داشبورد",icon:"🏠"},{key:"assets",fa:"دارایی‌ها",icon:"💼"},{key:"budget",fa:"بودجه",icon:"📊"},{key:"markets",fa:"بازارها",icon:"📈"},{key:"chat",fa:"چت هوشمند",icon:"🤖"},{key:"reports",fa:"گزارش‌ها",icon:"📄"},{key:"backup",fa:"بکاپ",icon:"🔒"}];
+const MARKET_DATA=[{key:"BTC",name:"بیت‌کوین",icon:"₿",priceToman:4500000000,change:2.4,signal:"buy"},{key:"ETH",name:"اتریوم",icon:"Ξ",priceToman:180000000,change:1.8,signal:"buy"},{key:"GOLD18",name:"طلای ۱۸ عیار (گرم)",icon:"🥇",priceToman:3450000,change:0.8,signal:"buy"},{key:"USD",name:"دلار آمریکا",icon:"💵",priceToman:920000,change:0.5,signal:"hold"},{key:"EUR",name:"یورو",icon:"💶",priceToman:995000,change:0.3,signal:"hold"},{key:"SILVER",name:"نقره",icon:"🥈",priceToman:42000,change:-0.6,signal:"hold"},{key:"IRAN_STOCK",name:"شاخص کل بورس",icon:"📈",priceToman:2100000,change:-1.2,signal:"sell"}];
+
+let state={theme:localStorage.getItem("md_theme")||"light",currentModule:"dashboard",assetFilter:null,assets:JSON.parse(localStorage.getItem("md_assets")||"null")||seedAssets(),budgets:JSON.parse(localStorage.getItem("md_budgets")||"null")||seedBudgets(),salary:parseInt(localStorage.getItem("md_salary")||"50000000",10),editingId:null,editingBudgetId:null,chatHistory:JSON.parse(localStorage.getItem("md_chat")||"[]"),wealthHistory:JSON.parse(localStorage.getItem("md_history")||"null")||seedHistory()};
+
+function seedAssets(){return[{id:"a1",name:"طلا ۱۸ عیار",cls:"GOLD",amount:120000000,change:6.2,note:""},{id:"a2",name:"بیت‌کوین",cls:"CRYPTO",amount:80000000,change:-3.1,note:""},{id:"a3",name:"فولاد",cls:"IRAN_STOCK",amount:45000000,change:2.5,note:""},{id:"a4",name:"سپرده بانکی",cls:"BANK_DEPOSIT",amount:40000000,change:1.0,note:""},{id:"a5",name:"دلار",cls:"DOLLAR",amount:25000000,change:4.3,note:""}]}
+function seedBudgets(){return[{id:"b1",name:"خانه",spent:8000000,cap:10000000},{id:"b2",name:"خوراک",spent:3500000,cap:5000000},{id:"b3",name:"تفریح",spent:4800000,cap:5000000},{id:"b4",name:"حمل‌ونقل",spent:1800000,cap:2000000}]}
+function seedHistory(){const n=Date.now(),d=86400000;return[{t:n-d*6,v:210000000},{t:n-d*5,v:218000000},{t:n-d*4,v:225000000},{t:n-d*3,v:240000000},{t:n-d*2,v:258000000},{t:n-d*1,v:290000000},{t:n,v:310000000}]}
+function save(){localStorage.setItem("md_assets",JSON.stringify(state.assets));localStorage.setItem("md_budgets",JSON.stringify(state.budgets));localStorage.setItem("md_theme",state.theme);localStorage.setItem("md_salary",state.salary);localStorage.setItem("md_chat",JSON.stringify(state.chatHistory));localStorage.setItem("md_history",JSON.stringify(state.wealthHistory))}
+
+const FA="۰۱۲۳۴۵۶۷۸۹";
+function faNum(n){return Number(n).toLocaleString("en-US").replace(/\d/g,d=>FA[d])}
+function toman(n){return faNum(n)+" تومان"}
+function shortToman(n){if(n>=1e9)return(n/1e9).toFixed(1).replace(/\d/g,d=>FA[d])+" میلیارد";if(n>=1e6)return(n/1e6).toFixed(1).replace(/\d/g,d=>FA[d])+" میلیون";if(n>=1e3)return(n/1e3).toFixed(0).replace(/\d/g,d=>FA[d])+" هزار";return faNum(n)}
+function pct(p){const s=p>=0?"▲":"▼";return s+" "+Math.abs(p).toFixed(1).replace(/\d/g,d=>FA[d])+"٪"}
+function cls(k){return ASSET_CLASSES.find(c=>c.key===k)||ASSET_CLASSES[0]}
+function uid(){return"x"+Date.now()+Math.random().toString(36).slice(2,7)}
+function toast(msg,gold){const t=document.getElementById("toast");t.textContent=msg;t.className="toast show"+(gold?" gold":"");clearTimeout(t._h);t._h=setTimeout(()=>t.className="toast",2500)}
+function applyTheme(){document.documentElement.setAttribute("data-theme",state.theme);const b=document.getElementById("themeBtn");if(b)b.textContent=state.theme==="dark"?"☀️":"🌙"}
+function toggleTheme(){state.theme=state.theme==="dark"?"light":"dark";applyTheme();save()}
+
+setTimeout(()=>document.getElementById("splash").classList.add("hide"),1600);
+function enterApp(){document.getElementById("loginPage").style.display="none";document.getElementById("app").classList.add("active");renderModules();render()}
+
+function renderModules(){document.getElementById("modulesRow").innerHTML=MODULES.map(m=>`<button class="chip ${state.currentModule===m.key?'active':''}" onclick="goModule('${m.key}')">${m.icon} ${m.fa}</button>`).join("")}
+function goModule(k){state.currentModule=k;state.assetFilter=null;renderModules();render()}
+function updateFab(){const f=document.getElementById("fab");if(state.currentModule==="assets"||state.currentModule==="budget")f.classList.add("active");else f.classList.remove("active")}
+function fabAction(){if(state.currentModule==="assets")openAssetModal();else if(state.currentModule==="budget")openBudgetModal()}
+
+function render(){const c=document.getElementById("content");updateFab();switch(state.currentModule){case"dashboard":c.innerHTML=renderDashboard();break;case"assets":c.innerHTML=renderAssets();break;case"budget":c.innerHTML=renderBudget();break;case"markets":c.innerHTML=renderMarkets();break;case"chat":c.innerHTML=renderChat();afterChatRender();break;case"reports":c.innerHTML=renderReports();break;case"backup":c.innerHTML=renderBackup();break;default:c.innerHTML='<div class="placeholder-page"><div class="ico">🔧</div><h2>در حال ساخت</h2></div>'}}
+
+function renderDashboard(){const total=state.assets.reduce((s,a)=>s+a.amount,0);const weighted=total===0?0:state.assets.reduce((s,a)=>s+a.amount*a.change,0)/total;const spent=state.budgets.reduce((s,b)=>s+b.spent,0);const cap=state.budgets.reduce((s,b)=>s+b.cap,0);const ratio=cap===0?0:Math.min(spent/cap,1);const overRatio=ratio>=0.8;const remaining=state.salary-spent;const suggestKeep=Math.round(state.salary*0.30);let cmd={head:"★ پیشنهاد امروز مرکز فرماندهی",body:"",tone:"gold"};const fun=state.budgets.find(b=>b.name==="تفریح");if(fun&&fun.spent/fun.cap>=0.9){cmd.body="⚠ بودجه تفریح تقریباً تمام شده — این هفته خرج تفریح نکن.";cmd.tone="red"}else if(remaining<0){cmd.body="⚠ مصرف شما از حقوق پیشی گرفته. الان "+shortToman(Math.abs(remaining))+" تومان کسری داری.";cmd.tone="red"}else if(ratio<0.5){cmd.body="✓ وضعیت بودجه عالی است. پیشنهاد می‌کنم "+shortToman(suggestKeep)+" تومان (۳۰٪ حقوق) را برای هفته آینده کنار بگذاری.";cmd.tone="green"}else{cmd.body="پیشنهاد: "+shortToman(suggestKeep)+" تومان از حقوق باقی‌مانده را برای هفته آینده نگه دار.";cmd.tone="gold"}
+return'<div class="card navy"><div class="card-title">ارزش کل دارایی</div><div class="card-value">'+toman(total)+'</div><div class="card-sub">'+pct(weighted)+' این ماه</div></div><div class="card"><div class="card-title" style="text-align:right;">بودجه مصرف‌شده</div><div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="color:var(--text-soft);font-size:13px;">از '+toman(cap)+'</span><span style="font-size:24px;font-weight:800;">'+faNum(spent)+'</span></div><div class="progress"><div class="progress-bar '+(overRatio?'warn':'')+'" style="width:'+(ratio*100).toFixed(1)+'%"></div></div></div><div class="card '+cmd.tone+'"><div class="cmd-head">'+cmd.head+'</div><div style="color:var(--text);">'+cmd.body+'</div></div><div class="stats-grid"><div class="stat"><div class="num">'+faNum(ASSET_CLASSES.length)+'</div><div class="lbl">کلاس دارایی</div></div><div class="stat"><div class="num">۹</div><div class="lbl">اسپرینت توسعه</div></div></div>'}
+
+function renderAssets(){const f=state.assetFilter?state.assets.filter(a=>a.cls===state.assetFilter):state.assets;const total=f.reduce((s,a)=>s+a.amount,0);const filters='<div class="filters"><button class="chip '+(!state.assetFilter?'active':'')+'" onclick="setFilter(null)">همه</button>'+ASSET_CLASSES.map(c=>'<button class="chip '+(state.assetFilter===c.key?'active':'')+'" onclick="setFilter(\''+c.key+'\')">'+c.fa+'</button>').join("")+'</div>';const list=f.length===0?'<div class="empty"><div class="big">📭</div>هنوز دارایی‌ای نیست</div>':f.map(a=>{const c=cls(a.cls);return'<div class="asset-row" onclick="openAssetModal(\''+a.id+'\')"><div class="icon">'+c.icon+'</div><div class="asset-info"><div class="asset-name">'+a.name+'</div><div class="asset-meta">'+c.fa+' · <span class="'+(a.change>=0?'text-green':'text-red')+'">'+pct(a.change)+'</span></div></div><div class="asset-amount">'+shortToman(a.amount)+'</div></div>'}).join("");return'<div class="card navy"><div class="card-title">ارزش کل سبد</div><div class="card-value">'+toman(total)+'</div></div>'+filters+list}
+function setFilter(k){state.assetFilter=k;render()}
+
+function renderBudget(){const spent=state.budgets.reduce((s,b)=>s+b.spent,0);const cap=state.budgets.reduce((s,b)=>s+b.cap,0);const remaining=state.salary-spent;const rows=state.budgets.map(b=>{const r=Math.min(b.spent/b.cap,1);const w=r>=0.8;return'<div class="card" style="padding:16px;"><div style="display:flex;justify-content:space-between;align-items:center;"><span style="color:var(--text-soft);font-size:13px;">'+b.name+'</span><div><button class="btn small ghost" onclick="openBudgetModal(\''+b.id+'\')" style="padding:4px 10px;">✏️</button> <button class="btn small danger" onclick="deleteBudget(\''+b.id+'\')" style="padding:4px 10px;">✕</button></div></div><div style="display:flex;justify-content:space-between;margin-top:6px;"><span style="font-weight:700;">'+faNum(b.spent)+' / '+faNum(b.cap)+'</span><span class="'+(w?'text-red':'text-green')+'" style="font-size:13px;">'+(w?'هشدار':'ایمن')+'</span></div><div class="progress"><div class="progress-bar '+(w?'warn':'')+'" style="width:'+(r*100).toFixed(1)+'%"></div></div></div>'}).join("");return'<div class="card navy"><div class="card-title">حقوق ماهانه</div><div class="card-value">'+toman(state.salary)+'</div><div class="card-sub" style="cursor:pointer;text-decoration:underline;" onclick="editSalary()">ویرایش</div></div><div class="card '+(remaining<0?'red':'green')+'"><div class="card-title">باقی‌مانده</div><div style="font-size:24px;font-weight:800;">'+toman(Math.max(remaining,0))+'</div><div class="card-sub">'+(remaining<0?'کسر بودجه!':'ایمن')+'</div></div><div class="card navy"><div class="card-title">مجموع بودجه</div><div class="card-value">'+toman(spent)+'</div><div class="card-sub">از '+toman(cap)+'</div></div>'+rows+'<div class="card gold"><div class="cmd-head">★ پیشنهاد</div><div style="color:var(--text);">'+faNum(Math.round(state.salary*0.30))+' تومان (۳۰٪ حقوق) برای هفته آینده کنار بگذار.</div></div>'}
+function editSalary(){const v=prompt("حقوق ماهانه (تومان):",state.salary);if(v===null)return;const n=parseInt(v.replace(/\D/g,""),10);if(!n||n<=0)return toast("عدد نامعتبر",true);state.salary=n;save();render();toast("به‌روز شد")}
+function openBudgetModal(id){state.editingBudgetId=id;const t=document.getElementById("budgetModalTitle");if(id){const b=state.budgets.find(x=>x.id===id);t.textContent="ویرایش";document.getElementById("bName").value=b.name;document.getElementById("bCap").value=b.cap;document.getElementById("bSpent").value=b.spent}else{t.textContent="افزودن دسته";document.getElementById("bName").value="";document.getElementById("bCap").value="";document.getElementById("bSpent").value=""}document.getElementById("budgetModalBg").classList.add("active")}
+function closeBudgetModal(){document.getElementById("budgetModalBg").classList.remove("active");state.editingBudgetId=null}
+function saveBudget(){const n=document.getElementById("bName").value.trim();const c=parseInt(document.getElementById("bCap").value.replace(/\D/g,""),10);const s=parseInt(document.getElementById("bSpent").value.replace(/\D/g,""),10)||0;if(!n||!c)return toast("نام و سقف لازم است",true);if(state.editingBudgetId){Object.assign(state.budgets.find(x=>x.id===state.editingBudgetId),{name:n,cap:c,spent:s});toast("ویرایش شد")}else{state.budgets.push({id:uid(),name:n,cap:c,spent:s});toast("اضافه شد")}save();closeBudgetModal();render()}
+function deleteBudget(id){if(!confirm("حذف شود؟"))return;state.budgets=state.budgets.filter(b=>b.id!==id);save();render();toast("حذف شد")}
+
+function renderMarkets(){const rows=MARKET_DATA.map(m=>{const s=m.signal==="buy"?{t:"خرید",c:"buy"}:m.signal==="sell"?{t:"فروش",c:"sell"}:{t:"نگه‌داشت",c:"hold"};return'<div class="market-row"><div class="icon">'+m.icon+'</div><div class="market-info"><div class="asset-name">'+m.name+'</div><div class="asset-meta">'+shortToman(m.priceToman)+' · <span class="'+(m.change>=0?'text-green':'text-red')+'">'+pct(m.change)+'</span></div></div><span class="signal '+s.c+'">'+s.t+'</span></div>'}).join("");const b=MARKET_DATA.find(m=>m.key==="BTC"),g=MARKET_DATA.find(m=>m.key==="GOLD18");const cmp=b.change>g.change?"بیت‌کوین در این ماه عملکرد بهتری داشته.":"طلا در این ماه عملکرد بهتری داشته.";return'<div class="card navy"><div class="card-title">خلاصه بازارها</div><div class="card-value">'+faNum(MARKET_DATA.length)+' بازار</div></div><div class="card gold"><div class="cmd-head">★ مقایسه طلا و بیت‌کوین</div><div style="color:var(--text);">'+cmp+'</div></div>'+rows}
+
+function renderChat(){const qs=["تحلیل دارایی‌های من","وضعیت بودجه چطوره؟","پیشنهاد سرمایه‌گذاری","چقدر پس‌انداز کنم؟","مقایسه طلا و بیت‌کوین","خلاصه وضعیت مالی"];return'<div class="quick-questions">'+qs.map(q=>'<button class="chip" onclick="quickAsk(\''+q+'\')">'+q+'</button>').join("")+'</div><div class="chat-box" id="chatBox">'+(state.chatHistory.length===0?'<div class="msg bot">سلام 👋 من دستیار هوشمند MarketDeskAI هستم. می‌توانم دارایی‌ها و بودجه‌ات را تحلیل کنم.</div>':"")+state.chatHistory.map(m=>'<div class="msg '+m.role+'">'+m.text+'</div>').join("")+'</div><div class="chat-input-row"><input type="text" id="chatInput" placeholder="سؤالت..." onkeydown="if(event.key===\'Enter\')sendChat()"><button class="btn gold" onclick="sendChat()">ارسال</button></div><div style="text-align:center;margin-top:8px;"><button class="btn ghost small" onclick="clearChat()">پاک کردن</button></div>'}
+function afterChatRender(){const b=document.getElementById("chatBox");if(b)b.scrollTop=b.scrollHeight}
+function quickAsk(q){document.getElementById("chatInput").value=q;sendChat()}
+function sendChat(){const i=document.getElementById("chatInput");const t=i.value.trim();if(!t)return;state.chatHistory.push({role:"user",text:t});const r=analyze(t);state.chatHistory.push({role:"bot",text:r});i.value="";save();render()}
+function clearChat(){if(!confirm("پاک شود؟"))return;state.chatHistory=[];save();render()}
+
+function analyze(q){const l=q.toLowerCase();const total=state.assets.reduce((s,a)=>s+a.amount,0);const spent=state.budgets.reduce((s,b)=>s+b.spent,0);const cap=state.budgets.reduce((s,b)=>s+b.cap,0);const remaining=state.salary-spent;
+if(l.includes("تحلیل دارایی")){if(state.assets.length===0)return"هنوز دارایی‌ای ثبت نکردی.";const sorted=[...state.assets].sort((a,b)=>b.amount-a.amount);const grouped={};state.assets.forEach(a=>{grouped[a.cls]=(grouped[a.cls]||0)+a.amount});const g=Object.entries(grouped).sort((a,b)=>b[1]-a[1]).slice(0,3);const lines=g.map(([k,v])=>'• '+cls(k).fa+': '+toman(v)+' ('+((v/total)*100).toFixed(1)+'٪)').join("\n");return'📊 تحلیل دارایی:\n\nارزش کل: '+toman(total)+'\nتعداد: '+faNum(state.assets.length)+'\nبزرگ‌ترین: '+sorted[0].name+'\n\nتوزیع:\n'+lines+'\n\n💡 '+(g.length>=3?"تنوع مناسب":"سبد را متنوع‌تر کن")}
+if(l.includes("بودجه")||l.includes("خرج")){const r=cap===0?0:(spent/cap*100);const worst=[...state.budgets].sort((a,b)=>(b.spent/b.cap)-(a.spent/a.cap))[0];let m='💰 بودجه:\n\nمصرف: '+toman(spent)+'\nسقف: '+toman(cap)+'\nدرصد: '+r.toFixed(1)+'٪\nباقی‌مانده: '+toman(Math.max(remaining,0))+'\n';if(worst)m+='\n⚠ پرخطر: '+worst.name+' با '+((worst.spent/worst.cap)*100).toFixed(0)+'٪';if(r>=80)m+='\n\n🚨 خرج‌های غیرضروری را متوقف کن.';else if(r<=50)m+='\n\n✓ عالیه!';return m}
+if(l.includes("سرمایه")||l.includes("پیشنهاد")){const s=Math.round(state.salary*0.30);return'🎯 پیشنهاد سرمایه‌گذاری:\n\n۱. '+toman(s)+' (۳۰٪ حقوق) را کنار بگذار.\n\n۲. توزیع پیشنهادی:\n   • ۴۰٪ طلا\n   • ۲۵٪ دلار\n   • ۲۰٪ بورس\n   • ۱۵٪ رمزارز\n\n۳. سیگنال خرید: '+MARKET_DATA.filter(m=>m.signal==="buy").map(m=>m.name).join("، ")+'\n\n⚠ تحلیل نمایشی است'}
+if(l.includes("پس‌انداز")||l.includes("کنار")){return'💎 پس‌انداز:\n\nحداقل: '+toman(Math.round(state.salary*0.20))+'\nپیشنهادی: '+toman(Math.round(state.salary*0.30))+'\nایده‌آل: '+toman(Math.round(state.salary*0.40))+'\n\nباقی‌مانده فعلی: '+toman(Math.max(remaining,0))}
+if(l.includes("طلا")&&l.includes("بیت")){const g=MARKET_DATA.find(m=>m.key==="GOLD18"),b=MARKET_DATA.find(m=>m.key==="BTC");return'⚖️ طلا vs بیت‌کوین:\n\n🥇 طلا: '+shortToman(g.priceToman)+' · '+pct(g.change)+' · ریسک کم\n₿ بیت‌کوین: '+shortToman(b.priceToman)+' · '+pct(b.change)+' · ریسک بالا\n\n📌 '+(b.change>g.change?"بیت‌کوین بازده بیشتر، ریسک بیشتر. پیشنهاد: ۷۰٪ طلا، ۳۰٪ بیت.":"طلا منطقی‌تر است.")}
+if(l.includes("خلاصه")||l.includes("وضعیت")){return'📋 خلاصه:\n\n💰 دارایی: '+toman(total)+'\n📊 تعداد: '+faNum(state.assets.length)+'\n💵 حقوق: '+toman(state.salary)+'\n🛒 مصرف: '+toman(spent)+'\n📉 باقی‌مانده: '+toman(Math.max(remaining,0))+'\n\n'+(remaining>0?"✓ ایمن":"⚠ کسر بودجه")}
+return"می‌توانم این‌ها را تحلیل کنم:\n• تحلیل دارایی\n• وضعیت بودجه\n• پیشنهاد سرمایه‌گذاری\n• پس‌انداز\n• مقایسه طلا/بیت‌کوین\n• خلاصه وضعیت"}
+
+function renderReports(){const total=state.assets.reduce((s,a)=>s+a.amount,0);const grouped={};state.assets.forEach(a=>{grouped[a.cls]=(grouped[a.cls]||0)+a.amount});const g=Object.entries(grouped).sort((a,b)=>b[1]-a[1]);const colors=["#D4A537","#0B2447","#1F9D55","#D64545","#4A5677","#E8C468","#19376D","#9AA3B8"];const dist=g.map(([k,v],i)=>'<div class="dist-row"><div><span class="dist-dot" style="background:'+colors[i%colors.length]+'"></span>'+cls(k).fa+'</div><div style="font-weight:700;">'+toman(v)+' <span style="color:var(--text-soft);font-size:12px;">('+((v/total)*100).toFixed(1)+'٪)</span></div></div>').join("");const max=Math.max(...state.wealthHistory.map(h=>h.v));const bars=state.wealthHistory.map(h=>{const hh=(h.v/max)*100;const d=new Date(h.t);const lb=faNum(d.getDate())+'/'+faNum(d.getMonth()+1);return'<div class="bar-col"><div class="bar" style="height:'+hh+'%"></div><div class="bar-label">'+lb+'</div></div>'}).join("");const growth=state.wealthHistory.length>=2?((state.wealthHistory[state.wealthHistory.length-1].v-state.wealthHistory[0].v)/state.wealthHistory[0].v*100):0;return'<div class="card navy"><div class="card-title">ارزش کل</div><div class="card-value">'+toman(total)+'</div><div class="card-sub">رشد '+faNum(state.wealthHistory.length)+' روز: '+pct(growth)+'</div></div><div class="card"><div class="card-title" style="text-align:right;">نمودار ثروت</div><div class="bar-chart">'+bars+'</div></div><div class="card"><div class="card-title" style="text-align:right;">توزیع دارایی</div>'+(dist||'<div class="empty">هنوز دارایی‌ای نیست</div>')+'</div><div class="card gold"><div class="cmd-head">★ خلاصه سرمایه‌گذار</div><div style="color:var(--text);">ارزش: '+toman(total)+'<br>رشد هفتگی: '+pct(growth)+'<br>تنوع: '+(g.length>=4?"متنوع":"نیاز به تنوع")+'</div></div><button class="btn gold block" onclick="window.print()" style="margin-bottom:8px;">📄 خروجی PDF / چاپ</button>'}
+
+function renderBackup(){const size=JSON.stringify({a:state.assets,b:state.budgets}).length;return'<div class="card navy"><div class="card-title">حجم بکاپ</div><div class="card-value">'+faNum(Math.round(size/1024))+' کیلوبایت</div></div><div class="card green"><div class="cmd-head">✓ امنیت</div><div style="color:var(--text);">تمام داده‌ها فقط روی دستگاه شما ذخیره می‌شود.</div></div><div class="backup-list"><button class="btn gold block" onclick="doExport()">📤 خروجی JSON</button><button class="btn block" onclick="document.getElementById(\'importModalBg\').classList.add(\'active\')">📥 بازیابی</button><button class="btn ghost block" onclick="copyData()">📋 کپی داده‌ها</button><button class="btn danger block" onclick="doReset()">🗑 بازنشانی</button></div><div class="card"><div class="card-title" style="text-align:right;">آمار</div><div class="dist-row"><span>دارایی‌ها</span><span>'+faNum(state.assets.length)+'</span></div><div class="dist-row"><span>بودجه‌ها</span><span>'+faNum(state.budgets.length)+'</span></div><div class="dist-row"><span>پیام‌ها</span><span>'+faNum(state.chatHistory.length)+'</span></div></div>'}
+function doExport(){const d={version:"1.0",exportedAt:new Date().toISOString(),owner:"Amin Yazdkhasti",app:"MarketDeskAI",assets:state.assets,budgets:state.budgets,salary:state.salary,chatHistory:state.chatHistory,wealthHistory:state.wealthHistory};const b=new Blob([JSON.stringify(d,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="marketdeskai-backup-"+Date.now()+".json";a.click();toast("دانلود شد",true)}
+function copyData(){navigator.clipboard.writeText(JSON.stringify({assets:state.assets,budgets:state.budgets,salary:state.salary})).then(()=>toast("کپی شد",true))}
+function doImport(){const r=document.getElementById("importData").value.trim();if(!r)return toast("داده‌ای نیست",true);try{const d=JSON.parse(r);if(Array.isArray(d.assets))state.assets=d.assets;if(Array.isArray(d.budgets))state.budgets=d.budgets;if(typeof d.salary==="number")state.salary=d.salary;if(Array.isArray(d.chatHistory))state.chatHistory=d.chatHistory;if(Array.isArray(d.wealthHistory))state.wealthHistory=d.wealthHistory;save();document.getElementById("importModalBg").classList.remove("active");render();toast("موفق",true)}catch(e){toast("JSON نامعتبر",true)}}
+function doReset(){if(!confirm("همه داده پاک شود؟"))return;localStorage.clear();location.reload()}
+
+function openAssetModal(id){state.editingId=id;const t=document.getElementById("modalTitle");const s=document.getElementById("fClass");s.innerHTML=ASSET_CLASSES.map(c=>'<option value="'+c.key+'">'+c.fa+'</option>').join("");if(id){const a=state.assets.find(x=>x.id===id);if(a){t.textContent="ویرایش";document.getElementById("fName").value=a.name;s.value=a.cls;document.getElementById("fAmount").value=a.amount;document.getElementById("fChange").value=a.change;document.getElementById("fNote").value=a.note||""}}else{t.textContent="افزودن دارایی";document.getElementById("fName").value="";s.value="GOLD";document.getElementById("fAmount").value="";document.getElementById("fChange").value="";document.getElementById("fNote").value=""}document.getElementById("modalBg").classList.add("active")}
+function closeAssetModal(){document.getElementById("modalBg").classList.remove("active");state.editingId=null}
+function saveAsset(){const n=document.getElementById("fName").value.trim();const ck=document.getElementById("fClass").value;const a=parseInt(document.getElementById("fAmount").value.replace(/\D/g,""),10);const ch=parseFloat(document.getElementById("fChange").value.replace(",","."))||0;const no=document.getElementById("fNote").value.trim();if(!n)return toast("نام لازم است",true);if(!a||a<=0)return toast("ارزش باید بزرگ‌تر از صفر باشد",true);if(state.editingId){Object.assign(state.assets.find(x=>x.id===state.editingId),{name:n,cls:ck,amount:a,change:ch,note:no});toast("ویرایش شد")}else{state.assets.push({id:uid(),name:n,cls:ck,amount:a,change:ch,note:no});toast("اضافه شد")}save();closeAssetModal();render()}
+
+document.getElementById("modalBg").addEventListener("click",e=>{if(e.target.id==="modalBg")closeAssetModal()});
+document.getElementById("budgetModalBg").addEventListener("click",e=>{if(e.target.id==="budgetModalBg")closeBudgetModal()});
+applyTheme();
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("service-worker.js").catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
