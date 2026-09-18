@@ -1,5 +1,5 @@
 const CACHE_NAME = "marketdeskai-v1";
-const ASSETS = ["./MarketDeskAI.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
+const ASSETS = ["./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS).catch(() => {})));
