@@ -1,0 +1,17 @@
+{
+  "name": "MarketDeskAI — دستیار هوشمند مدیریت ثروت",
+  "short_name": "MarketDeskAI",
+  "description": "دستیار هوشمند مدیریت ثروت",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./MarketDeskAI.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B2447",
+  "theme_color": "#0B2447",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

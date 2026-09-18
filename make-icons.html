@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>ساخت آیکون</title></head>
+<body style="text-align:center;padding:40px;font-family:Tahoma">
+<h2>ساخت آیکون‌های MarketDeskAI</h2>
+<canvas id="c"></canvas>
+<button onclick="make(192)" style="display:block;margin:20px auto;padding:15px 30px;background:#D4A537;border:none;border-radius:10px;font-size:16px;cursor:pointer">⬇ دانلود icon-192.png</button>
+<button onclick="make(512)" style="display:block;margin:20px auto;padding:15px 30px;background:#0B2447;color:#fff;border:none;border-radius:10px;font-size:16px;cursor:pointer">⬇ دانلود icon-512.png</button>
+<script>
+function make(size){
+  const c=document.getElementById("c");c.width=size;c.height=size;
+  const x=c.getContext("2d");
+  const g=x.createLinearGradient(0,0,size,size);
+  g.addColorStop(0,"#061733");g.addColorStop(1,"#0B2447");
+  x.fillStyle=g;x.fillRect(0,0,size,size);
+  x.strokeStyle="#D4A537";x.lineWidth=size*0.02;
+  x.strokeRect(size*0.06,size*0.06,size*0.88,size*0.88);
+  x.fillStyle="#D4A537";x.font="bold "+size*0.55+"px sans-serif";
+  x.textAlign="center";x.textBaseline="middle";
+  x.fillText("M",size/2,size/2);
+  x.fillStyle="#1F9D55";x.beginPath();
+  x.arc(size*0.78,size*0.78,size*0.055,0,Math.PI*2);x.fill();
+  c.toBlob(b=>{const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="icon-"+size+".png";a.click()});
+}
+</script></body></html>
