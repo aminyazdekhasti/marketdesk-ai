@@ -4,7 +4,7 @@
   "description": "دستیار هوشمند مدیریت ثروت",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "./MarketDeskAI.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
