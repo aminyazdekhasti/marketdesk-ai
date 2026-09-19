@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080D18">
+<title>MarketDeskAI</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+:root{--bg:#F5F7FB;--surface:#FFFFFF;--surface-2:#EEF1F7;--text:#0B1220;--text-2:#5B6478;--text-3:#8B94A8;--border:#E3E7EF;--shadow:0 4px 24px rgba(11,36,71,.06);--navy:#0B2447;--navy-2:#19376D;--gold:#D4A537;--gold-2:#E8C468;--green:#16A34A;--green-2:#22C55E;--red:#DC2626;--red-2:#EF4444;--orange:#F7931A;--purple:#8B5CF6;--cyan:#0EA5E9}
+[data-theme="dark"]{--bg:#080D18;--surface:#0F1626;--surface-2:#161E30;--text:#E8ECF5;--text-2:#8B94A8;--text-3:#5B6478;--border:#1F2941;--shadow:0 4px 24px rgba(0,0,0,.4);--gold:#E8C468;--gold-2:#F0D488;--green:#22C55E;--green-2:#4ADE80;--red:#EF4444;--red-2:#F87171}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:'Vazirmatn',-apple-system,BlinkMacSystemFont,Tahoma,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.65;transition:background .3s,color .3s;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+button,input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+#splash{position:fixed;inset:0;z-index:9999;background:radial-gradient(circle at 50% 40%,#0B2447,#050A14);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease,visibility .6s}
+#splash.hide{opacity:0;visibility:hidden}
+.splash-logo{width:110px;height:110px;border-radius:26px;overflow:hidden;box-shadow:0 20px 60px rgba(212,165,55,.35);animation:pop .8s ease}
+.splash-logo img{width:100%;height:100%;object-fit:cover;display:block}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+#splash h1{margin-top:22px;font-size:26px;font-weight:800;color:var(--gold);letter-spacing:-.5px}
+#splash p{margin-top:6px;color:#8B94A8;font-size:13px}
+#loginPage{display:none;min-height:100vh;padding:32px 24px;flex-direction:column;justify-content:center;align-items:center;background:radial-gradient(circle at 50% 0%,#0B2447 0%,#050A14 70%)}
+#loginPage.show{display:flex}
+.login-card{width:100%;max-width:380px;text-align:center}
+.login-logo{width:88px;height:88px;border-radius:22px;margin:0 auto 20px;overflow:hidden;box-shadow:0 12px 40px rgba(212,165,55,.3)}
+.login-logo img{width:100%;height:100%;object-fit:cover;display:block}
+.login-card h1{color:#fff;font-size:24px;font-weight:800;margin-bottom:4px}
+.login-card .tag{color:#8B94A8;font-size:13px;margin-bottom:36px}
+.btn-auth{width:100%;height:52px;border-radius:14px;background:var(--navy);color:#fff;font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;transition:transform .15s,background .2s;border:1px solid rgba(255,255,255,.06)}
+.btn-auth:hover{background:var(--navy-2);transform:translateY(-1px)}
+.btn-auth.ghost{background:transparent;border:1px solid rgba(255,255,255,.15);color:#E8ECF5}
+.btn-auth svg{width:20px;height:20px}
+.login-foot{margin-top:28px;font-size:11px;color:#5B6478;line-height:1.8}
+#app{display:none;min-height:100vh;flex-direction:column;padding-bottom:80px}
+#app.show{display:flex}
+.appbar{position:sticky;top:0;z-index:50;padding:14px 20px 12px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.appbar-title{display:flex;flex-direction:column;gap:2px}
+.appbar-title .brand{font-size:18px;font-weight:800;color:var(--text);letter-spacing:-.3px}
+.appbar-title .brand span{color:var(--gold)}
+.appbar-title .sub{font-size:11px;color:var(--text-3)}
+.appbar-actions{display:flex;gap:8px}
+.icon-btn{width:38px;height:38px;border-radius:12px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:background .2s}
+.icon-btn:active{background:var(--surface-2)}
+.icon-btn.spin svg{animation:spin 1s linear infinite}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.icon-btn svg{width:20px;height:20px}
+.main{flex:1;padding:16px 16px 20px;max-width:640px;margin:0 auto;width:100%}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card.dark{background:linear-gradient(135deg,#0B2447,#142E5C);border:none;color:#fff}
+.card.gold{background:linear-gradient(135deg,rgba(212,165,55,.12),rgba(212,165,55,.06));border:1px solid rgba(212,165,55,.3)}
+.card.green{background:linear-gradient(135deg,rgba(22,163,74,.12),rgba(22,163,74,.06));border:1px solid rgba(22,163,74,.3)}
+.card.red{background:linear-gradient(135deg,rgba(220,38,38,.12),rgba(220,38,38,.06));border:1px solid rgba(220,38,38,.3)}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.card-title{font-size:12px;color:var(--text-2);font-weight:600;letter-spacing:.2px}
+.card.dark .card-title{color:rgba(255,255,255,.65)}
+.card-link{font-size:12px;color:var(--gold);font-weight:600;cursor:pointer}
+.total-value{font-size:30px;font-weight:800;letter-spacing:-1px;color:#fff}
+.total-value .cur{font-size:14px;font-weight:600;color:rgba(255,255,255,.7);margin-right:6px}
+.total-change{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:700;background:rgba(34,197,94,.15);color:#22C55E}
+.total-change.down{background:rgba(239,68,68,.15);color:#EF4444}
+.health-card{display:flex;align-items:center;gap:16px}
+.health-ring{width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}
+.health-ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.health-ring .score{font-size:22px;font-weight:800;color:var(--green);z-index:2}
+.health-info{flex:1}
+.health-info .label{font-size:12px;color:var(--text-2);font-weight:600}
+.health-info .desc{font-size:11px;color:var(--text-3);margin-top:4px;line-height:1.6}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px}
+.stat-box .lbl{font-size:11px;color:var(--text-3);font-weight:600}
+.stat-box .val{font-size:18px;font-weight:800;margin-top:4px;color:var(--text)}
+.stat-box .sub{font-size:11px;color:var(--text-2);margin-top:2px}
+.stat-box.editable{cursor:pointer;transition:border-color .2s}
+.stat-box.editable:active{border-color:var(--gold)}
+.cmd-icon{width:32px;height:32px;border-radius:10px;background:rgba(212,165,55,.15);color:var(--gold);display:flex;align-items:center;justify-content:center}
+.cmd-text{font-size:13px;color:var(--text);line-height:1.8;margin-top:8px}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.quick-item{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;transition:background .2s;cursor:pointer}
+.quick-item:active{background:var(--surface-2)}
+.quick-item .qicon{width:36px;height:36px;border-radius:10px;background:var(--surface-2);color:var(--text-2);display:flex;align-items:center;justify-content:center}
+.quick-item.gold .qicon{background:rgba(212,165,55,.15);color:var(--gold)}
+.quick-item.green .qicon{background:rgba(22,163,74,.15);color:var(--green)}
+.quick-item.blue .qicon{background:rgba(25,55,109,.15);color:var(--navy-2)}
+.quick-item .qlabel{font-size:10px;color:var(--text-2);font-weight:600;text-align:center}
+.quick-item svg{width:18px;height:18px}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin:20px 0 10px}
+.section-head h2{font-size:14px;font-weight:800;color:var(--text)}
+.section-head a{font-size:12px;color:var(--gold);font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px}
+.live-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:8px;font-size:10px;font-weight:700;background:rgba(34,197,94,.15);color:var(--green)}
+.live-badge.stale{background:rgba(212,165,55,.15);color:var(--gold)}
+.live-badge.error{background:rgba(239,68,68,.15);color:var(--red)}
+.live-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.asset-row{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .12s,border-color .2s}
+.asset-row:active{transform:scale(.99);border-color:var(--gold)}
+.asset-icon{width:40px;height:40px;border-radius:12px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:var(--text-2);flex-shrink:0}
+.asset-icon.currency{background:rgba(22,163,74,.15);color:var(--green)}
+.asset-icon.gold{background:rgba(212,165,55,.15);color:var(--gold)}
+.asset-icon.crypto{background:rgba(247,147,26,.15);color:var(--orange)}
+.asset-icon.stock{background:rgba(25,55,109,.15);color:var(--navy-2)}
+.asset-icon.fund{background:rgba(139,92,246,.15);color:var(--purple)}
+.asset-icon.deposit{background:rgba(14,165,233,.15);color:var(--cyan)}
+.asset-info{flex:1;min-width:0}
+.asset-name{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.asset-meta{font-size:11px;color:var(--text-3);margin-top:2px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.asset-right{text-align:left;flex-shrink:0}
+.asset-price{font-size:13px;font-weight:800;color:var(--text)}
+.asset-chg{font-size:11px;font-weight:700;margin-top:2px}
+.asset-chg.up{color:var(--green)}
+.asset-chg.down{color:var(--red)}
+.sparkline{width:48px;height:24px;flex-shrink:0}
+.star-btn{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-3);flex-shrink:0}
+.star-btn.active{color:var(--gold)}
+.star-btn svg{width:16px;height:16px}
+.signal-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:8px;font-size:10px;font-weight:800}
+.signal-badge.buy{background:rgba(22,163,74,.15);color:var(--green)}
+.signal-badge.sell{background:rgba(220,38,38,.15);color:var(--red)}
+.signal-badge.hold{background:rgba(139,148,168,.15);color:var(--text-2)}
+.signal-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.signal-head .s-badge{padding:5px 12px;border-radius:10px;font-size:12px;font-weight:800}
+.signal-head .s-badge.buy{background:var(--green);color:#fff}
+.signal-head .s-badge.sell{background:var(--red);color:#fff}
+.signal-head .s-badge.hold{background:var(--text-3);color:#fff}
+.signal-head .s-conf{font-size:11px;color:var(--text-3);margin-right:auto}
+.reason-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.reason-item{display:flex;gap:8px;font-size:11px;color:var(--text-2);line-height:1.7}
+.reason-item::before{content:'•';color:var(--gold);font-weight:800;flex-shrink:0}
+.signal-source{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:10px;color:var(--text-3);display:flex;justify-content:space-between}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 12px;margin-bottom:8px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:8px 14px;border-radius:10px;background:var(--surface);border:1px solid var(--border);font-size:12px;font-weight:600;color:var(--text-2);transition:all .2s;display:flex;align-items:center;gap:6px}
+.tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+[data-theme="dark"] .tab.active{background:var(--gold);color:#0B1220;border-color:var(--gold)}
+.tab svg{width:14px;height:14px}
+.donut-wrap{display:flex;align-items:center;gap:20px;padding:4px 0}
+.donut{width:110px;height:110px;flex-shrink:0;position:relative}
+.donut svg{width:100%;height:100%;transform:rotate(-90deg)}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.donut-center .val{font-size:15px;font-weight:800;color:var(--text)}
+.donut-center .lbl{font-size:9px;color:var(--text-3)}
+.donut-legend{flex:1;display:flex;flex-direction:column;gap:6px}
+.legend-row{display:flex;align-items:center;gap:8px;font-size:11px}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.legend-name{flex:1;color:var(--text-2)}
+.legend-val{font-weight:700;color:var(--text)}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:90;background:var(--surface);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;padding:8px 8px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -4px 20px rgba(0,0,0,.06)}
+[data-theme="dark"] .bottom-nav{box-shadow:0 -4px 20px rgba(0,0,0,.3)}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;border-radius:12px;color:var(--text-3);font-size:10px;font-weight:600;transition:color .2s}
+.nav-item.active{color:var(--gold)}
+.nav-item svg{width:22px;height:22px}
+.fab{position:fixed;bottom:96px;left:20px;z-index:80;width:54px;height:54px;border-radius:18px;background:linear-gradient(135deg,var(--gold),#B8892E);color:#0B1220;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(212,165,55,.4);transition:transform .2s}
+.fab:active{transform:scale(.94)}
+.fab svg{width:26px;height:26px}
+.modal-bg{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);display:none;align-items:flex-end;justify-content:center;padding:0}
+.modal-bg.show{display:flex}
+.modal{background:var(--surface);border-radius:24px 24px 0 0;width:100%;max-width:640px;max-height:88vh;overflow-y:auto;padding:24px 20px calc(24px + env(safe-area-inset-bottom));animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px}
+.modal h3{font-size:17px;font-weight:800;margin-bottom:16px;color:var(--text)}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;font-weight:600;color:var(--text-2);margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;padding:11px 13px;border-radius:12px;background:var(--surface-2);border:1px solid var(--border);color:var(--text);outline:none;font-size:13px;transition:border-color .2s}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--gold)}
+.field .hint{font-size:10px;color:var(--text-3);margin-top:4px;line-height:1.7}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field-row .field{margin-bottom:0}
+.btn{width:100%;height:48px;border-radius:14px;background:var(--navy);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s,transform .1s}
+.btn:active{transform:scale(.98)}
+.btn.gold{background:var(--gold);color:#0B1220}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn.danger{background:rgba(220,38,38,.12);color:var(--red);border:1px solid rgba(220,38,38,.3)}
+.btn svg{width:18px;height:18px}
+.btn.small{height:38px;font-size:12px;padding:0 14px;width:auto}
+.btn+.btn{margin-top:8px}
+#aiPanel{position:fixed;bottom:0;left:0;right:0;z-index:190;background:var(--surface);border-radius:24px 24px 0 0;height:82vh;max-height:700px;display:none;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,.3);animation:slideUp .3s ease}
+#aiPanel.show{display:flex}
+.ai-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.ai-avatar{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--gold),#B8892E);color:#0B1220;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+.ai-header-info{flex:1}
+.ai-header-info .name{font-size:14px;font-weight:800}
+.ai-header-info .status{font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px;margin-top:2px}
+.ai-header-info .status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green)}
+.ai-close{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--text-2)}
+.ai-close svg{width:18px;height:18px}
+.ai-messages{flex:1;overflow-y:auto;padding:16px 16px 8px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:85%;padding:11px 14px;border-radius:16px;font-size:13px;line-height:1.8;white-space:pre-wrap;word-break:break-word}
+.msg.user{align-self:flex-start;background:var(--navy);color:#fff;border-bottom-right-radius:4px}
+[data-theme="dark"] .msg.user{background:var(--navy-2)}
+.msg.bot{align-self:flex-end;background:var(--surface-2);color:var(--text);border-bottom-left-radius:4px;border:1px solid var(--border)}
+.ai-quick{padding:8px 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;border-top:1px solid var(--border)}
+.ai-quick::-webkit-scrollbar{display:none}
+.quick-q{flex-shrink:0;padding:7px 12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);font-size:11px;color:var(--text-2);font-weight:600;white-space:nowrap}
+.ai-input-wrap{padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--border);display:flex;gap:8px}
+.ai-input{flex:1;padding:12px 14px;border-radius:14px;background:var(--surface-2);border:1px solid var(--border);color:var(--text);outline:none;font-size:13px}
+.ai-input:focus{border-color:var(--gold)}
+.ai-send{width:44px;height:44px;border-radius:14px;background:var(--gold);color:#0B1220;display:flex;align-items:center;justify-content:center}
+.ai-send svg{width:20px;height:20px}
+#toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--navy);color:#fff;padding:10px 18px;border-radius:12px;font-size:12px;font-weight:600;z-index:999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+#toast.gold{background:var(--gold);color:#0B1220}
+.empty{text-align:center;padding:48px 20px;color:var(--text-3)}
+.empty-icon{width:64px;height:64px;border-radius:20px;background:var(--surface-2);color:var(--text-3);display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px}
+.empty-icon svg{width:28px;height:28px}
+.empty-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.empty-text{font-size:12px}
+.svg-defs{position:absolute;width:0;height:0;overflow:hidden}
+</style>
+</head>
+<body>
+
+<svg class="svg-defs" aria-hidden="true">
+<symbol id="ic-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5V20a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2Z"/></symbol>
+<symbol id="ic-trend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></symbol>
+<symbol id="ic-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M16 12h.01"/></symbol>
+<symbol id="ic-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></symbol>
+<symbol id="ic-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></symbol>
+<symbol id="ic-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+<symbol id="ic-star-fill" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+<symbol id="ic-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+<symbol id="ic-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+<symbol id="ic-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
+<symbol id="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></symbol>
+<symbol id="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+<symbol id="ic-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></symbol>
+<symbol id="ic-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+<symbol id="ic-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
+<symbol id="ic-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+<symbol id="ic-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+<symbol id="ic-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></symbol>
+<symbol id="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+<symbol id="ic-crown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h18l-2-9-5 4-2-7-2 7-5-4Z"/></symbol>
+<symbol id="ic-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z"/></symbol>
+<symbol id="ic-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></symbol>
+<symbol id="ic-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></symbol>
+<symbol id="ic-sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M7 12h13M11 18h9"/></symbol>
+</svg>
+
+<div id="splash">
+  <div class="splash-logo"><img src="icon-512.png" alt="MarketDeskAI"></div>
+  <h1>MarketDeskAI</h1>
+  <p>دستیار هوشمند مدیریت ثروت</p>
+</div>
+
+<div id="loginPage">
+  <div class="login-card">
+    <div class="login-logo"><img src="icon-192.png" alt="MarketDeskAI"></div>
+    <h1>MarketDeskAI</h1>
+    <p class="tag">دستیار هوشمند مدیریت ثروت</p>
+    <button class="btn-auth" onclick="enterApp()"><svg><use href="#ic-shield"/></svg>ورود با Google</button>
+    <button class="btn-auth" onclick="enterApp()"><svg><use href="#ic-check"/></svg>ورود با Passkey</button>
+    <button class="btn-auth ghost" onclick="enterApp()">ورود به‌عنوان مهمان</button>
+    <p class="login-foot">Amin Yazdkhasti · مالک و توسعه‌دهنده<br>تمام حقوق محفوظ است</p>
+  </div>
+</div>
+
+<div id="app">
+  <header class="appbar">
+    <div class="appbar-title">
+      <div class="brand">MarketDesk<span>AI</span></div>
+      <div class="sub" id="appbarSub">دستیار هوشمند مدیریت ثروت</div>
+    </div>
+    <div class="appbar-actions">
+      <button class="icon-btn" onclick="manualRefresh()" id="refreshBtn" title="به‌روزرسانی"><svg><use href="#ic-refresh"/></svg></button>
+      <button class="icon-btn" onclick="toggleTheme()" id="themeBtn"><svg><use href="#ic-moon"/></svg></button>
+    </div>
+  </header>
+  <main class="main" id="mainContent"></main>
+  <nav class="bottom-nav" id="bottomNav"></nav>
+</div>
+
+<button class="fab" id="aiFab" onclick="openAI()"><svg><use href="#ic-chat"/></svg></button>
+
+<div class="modal-bg" id="assetModal"><div class="modal"><div class="modal-handle"></div><h3 id="assetModalTitle">افزودن دارایی</h3><div class="field"><label>دسته دارایی</label><select id="fClass"></select></div><div class="field"><label>نام دارایی</label><input type="text" id="fName" placeholder="مثلاً طلا ۱۸ عیار"></div><div class="field-row"><div class="field"><label>مقدار</label><input type="text" id="fQty" inputmode="decimal" placeholder="۱۰"></div><div class="field"><label>واحد</label><input type="text" id="fUnit" placeholder="گرم"></div></div><div class="field"><label>قیمت هر واحد (تومان)</label><input type="text" id="fUnitPrice" inputmode="numeric" placeholder="۳,۴۵۰,۰۰۰"></div><div class="field"><div class="hint">ℹ️ مبلغ کل = مقدار × قیمت واحد</div></div><div class="field"><label>یادداشت (اختیاری)</label><textarea id="fNote" rows="2"></textarea></div><button class="btn gold" onclick="saveAsset()"><svg><use href="#ic-check"/></svg>ذخیره</button><button class="btn ghost" onclick="closeModal('assetModal')">انصراف</button></div></div>
+
+<div class="modal-bg" id="cashModal"><div class="modal"><div class="modal-handle"></div><h3>سرمایه نقدی قابل سرمایه‌گذاری</h3><div class="field"><label>مبلغ (تومان)</label><input type="text" id="fCash" inputmode="numeric"><div class="hint">این مبلغ جدا از حقوق ماهانه است و می‌تواند از هر منبعی باشد.</div></div><button class="btn gold" onclick="saveCash()"><svg><use href="#ic-check"/></svg>ذخیره</button><button class="btn ghost" onclick="closeModal('cashModal')">انصراف</button></div></div>
+
+<div class="modal-bg" id="salaryModal"><div class="modal"><div class="modal-handle"></div><h3>حقوق ماهانه</h3><div class="field"><label>مبلغ (تومان)</label><input type="text" id="fSalary" inputmode="numeric"></div><button class="btn gold" onclick="saveSalary()"><svg><use href="#ic-check"/></svg>ذخیره</button><button class="btn ghost" onclick="closeModal('salaryModal')">انصراف</button></div></div>
+
+<div class="modal-bg" id="favModal"><div class="modal"><div class="modal-handle"></div><h3>مدیریت علاقه‌مندی‌ها</h3><div id="favList"></div><button class="btn ghost" style="margin-top:14px" onclick="closeModal('favModal')">بستن</button></div></div>
+
+<div class="modal-bg" id="signalModal"><div class="modal"><div class="modal-handle"></div><div id="signalDetailContent"></div><button class="btn ghost" style="margin-top:14px" onclick="closeModal('signalModal')">بستن</button></div></div>
+
+<div class="modal-bg" id="importModal"><div class="modal"><div class="modal-handle"></div><h3>بازیابی از فایل</h3><div class="field"><label>محتوای JSON</label><textarea id="importData" rows="8"></textarea></div><button class="btn gold" onclick="doImport()">بازیابی</button><button class="btn ghost" onclick="closeModal('importModal')">انصراف</button></div></div>
+
+<div id="aiPanel">
+  <div class="ai-header">
+    <div class="ai-avatar">AI</div>
+    <div class="ai-header-info"><div class="name">تحلیل‌گر مالی</div><div class="status">آماده پاسخ‌گویی</div></div>
+    <button class="ai-close" onclick="closeAI()"><svg><use href="#ic-close"/></svg></button>
+  </div>
+  <div class="ai-messages" id="aiMessages"></div>
+  <div class="ai-quick" id="aiQuick"></div>
+  <div class="ai-input-wrap">
+    <input class="ai-input" id="aiInput" placeholder="سؤالت را بپرس..." onkeydown="if(event.key==='Enter')sendAI()">
+    <button class="ai-send" onclick="sendAI()"><svg><use href="#ic-send"/></svg></button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ═══════════════ REPOSITORY ═══════════════ */
+const Repo = {
+  keys:{ assets:"md_assets_v2", favorites:"md_favorites_v2", settings:"md_settings_v2", history:"md_history_v2", chat:"md_chat_v2", live:"md_live_data_v3" },
+  read(k,f){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):f; }catch(e){ return f; } },
+  write(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} },
+  assets:{ getAll(){ return Repo.read(Repo.keys.assets, seedAssets()); }, save(a){ Repo.write(Repo.keys.assets,a); } },
+  favorites:{ getAll(){ return Repo.read(Repo.keys.favorites, ["USD","GOLD18","BTC","SHETEL","FEMELI"]); }, save(f){ Repo.write(Repo.keys.favorites,f); } },
+  settings:{ getAll(){ return Repo.read(Repo.keys.settings, { theme:"dark", salary:50000000, cashAvailable:10000000 }); }, save(s){ Repo.write(Repo.keys.settings,s); } },
+  history:{ getAll(){ return Repo.read(Repo.keys.history, seedHistory()); }, save(h){ Repo.write(Repo.keys.history,h); } },
+  chat:{ getAll(){ return Repo.read(Repo.keys.chat, []); }, save(c){ Repo.write(Repo.keys.chat,c); } },
+  live:{ get(){ return Repo.read(Repo.keys.live, null); }, save(l){ Repo.write(Repo.keys.live,l); } }
+};
+
+/* ═══════════════ CONSTANTS ═══════════════ */
+const ASSET_CLASSES = [
+  { key:"CURRENCY", fa:"ارز", icon:"$", color:"currency", unit:"واحد" },
+  { key:"GOLD",     fa:"طلا و فلزات", icon:"Au", color:"gold", unit:"گرم" },
+  { key:"CRYPTO",   fa:"رمزارز", icon:"₿", color:"crypto", unit:"واحد" },
+  { key:"STOCK",    fa:"سهام", icon:"S", color:"stock", unit:"سهم" },
+  { key:"FUND",     fa:"صندوق", icon:"F", color:"fund", unit:"واحد" },
+  { key:"DEPOSIT",  fa:"سپرده", icon:"D", color:"deposit", unit:"—" },
+  { key:"PROPERTY", fa:"ملک", icon:"P", color:"gold", unit:"—" },
+  { key:"OTHER",    fa:"سایر", icon:"•", color:"stock", unit:"—" }
+];
+
+const NAV_ITEMS = [
+  { key:"dashboard", fa:"داشبورد", icon:"ic-home" },
+  { key:"markets",   fa:"بازارها", icon:"ic-trend" },
+  { key:"portfolio", fa:"دارایی‌ها", icon:"ic-wallet" },
+  { key:"settings",  fa:"تنظیمات", icon:"ic-settings" }
+];
+
+const MARKET_TABS = [
+  { key:"fav",      fa:"علاقه‌مندی", icon:"ic-star" },
+  { key:"currency", fa:"ارز" },
+  { key:"gold",     fa:"طلا و فلزات" },
+  { key:"crypto",   fa:"رمزارز" },
+  { key:"stock",    fa:"بورس ایران" },
+  { key:"fund",     fa:"صندوق‌ها" }
+];
+
+/* نگاشت CoinGecko به کلیدهای ما */
+const CRYPTO_MAP = {
+  bitcoin:"BTC", ethereum:"ETH", binancecoin:"BNB", solana:"SOL", ripple:"XRP",
+  cardano:"ADA", dogecoin:"DOGE", tron:"TRX", "matic-network":"MATIC", polkadot:"DOT",
+  litecoin:"LTC", "shiba-inu":"SHIB", "avalanche-2":"AVAX", chainlink:"LINK", cosmos:"ATOM",
+  "pax-gold":"PAXG"
+};
+
+/* داده‌های بازار — قیمت/تغییر از API زنده می‌آید، این‌ها فقط اسکلت هستند */
+const MARKET_DATA = [
+  // ارزها
+  { key:"USD", cls:"currency", name:"دلار آمریکا", symbol:"$", price:920000, change:0, history:[880,890,900,895,905,915,920] },
+  { key:"EUR", cls:"currency", name:"یورو", symbol:"€", price:995000, change:0, history:[970,975,980,985,990,992,995] },
+  { key:"GBP", cls:"currency", name:"پوند انگلیس", symbol:"£", price:1150000, change:0, history:[1120,1130,1140,1145,1148,1149,1150] },
+  { key:"AED", cls:"currency", name:"درهم امارات", symbol:"د", price:251000, change:0, history:[248,249,250,250,250,251,251] },
+  { key:"TRY", cls:"currency", name:"لیر ترکیه", symbol:"₺", price:27000, change:0, history:[27500,27400,27300,27200,27100,27050,27000] },
+  { key:"CNY", cls:"currency", name:"یوان چین", symbol:"¥", price:127000, change:0, history:[126,126,126,127,127,127,127] },
+  { key:"JPY", cls:"currency", name:"ین ژاپن", symbol:"¥", price:6200, change:0, history:[6250,6240,6230,6220,6210,6205,6200] },
+  // طلا و فلزات
+  { key:"GOLD18", cls:"gold", name:"طلای ۱۸ عیار (گرم)", symbol:"Au", price:3450000, change:0, history:[3380,3400,3420,3435,3440,3445,3450] },
+  { key:"MESGHAL", cls:"gold", name:"مثقال طلا", symbol:"M", price:14950000, change:0, history:[14600,14700,14800,14850,14900,14920,14950] },
+  { key:"COIN", cls:"gold", name:"سکه امامی", symbol:"C", price:38500000, change:0, history:[37200,37500,37800,38000,38200,38400,38500] },
+  { key:"SILVER", cls:"gold", name:"نقره (گرم)", symbol:"Ag", price:42000, change:-0.6, history:[42300,42200,42150,42100,42050,42020,42000] },
+  { key:"PLATINUM", cls:"gold", name:"پلاتین (گرم)", symbol:"Pt", price:1850000, change:0.4, history:[1840000,1842000,1845000,1847000,1848000,1849000,1850000] },
+  { key:"PALLADIUM", cls:"gold", name:"پالادیوم (گرم)", symbol:"Pd", price:1620000, change:-0.3, history:[1625000,1624000,1623000,1622000,1621000,1620500,1620000] },
+  { key:"COPPER", cls:"gold", name:"مس (کیلو)", symbol:"Cu", price:485000, change:1.5, history:[470,475,478,480,482,484,485] },
+  // رمزارزها
+  { key:"BTC", cls:"crypto", name:"بیت‌کوین", symbol:"₿", price:0, change:0, history:[] },
+  { key:"ETH", cls:"crypto", name:"اتریوم", symbol:"Ξ", price:0, change:0, history:[] },
+  { key:"BNB", cls:"crypto", name:"بایننس کوین", symbol:"B", price:0, change:0, history:[] },
+  { key:"SOL", cls:"crypto", name:"سولانا", symbol:"◎", price:0, change:0, history:[] },
+  { key:"XRP", cls:"crypto", name:"ریپل", symbol:"X", price:0, change:0, history:[] },
+  { key:"ADA", cls:"crypto", name:"کاردانو", symbol:"A", price:0, change:0, history:[] },
+  { key:"DOGE", cls:"crypto", name:"دوج‌کوین", symbol:"Ð", price:0, change:0, history:[] },
+  { key:"TRX", cls:"crypto", name:"ترون", symbol:"T", price:0, change:0, history:[] },
+  { key:"MATIC", cls:"crypto", name:"پالیگان", symbol:"M", price:0, change:0, history:[] },
+  { key:"DOT", cls:"crypto", name:"پولکادات", symbol:"●", price:0, change:0, history:[] },
+  { key:"LTC", cls:"crypto", name:"لایت‌کوین", symbol:"Ł", price:0, change:0, history:[] },
+  { key:"SHIB", cls:"crypto", name:"شیبا اینو", symbol:"S", price:0, change:0, history:[] },
+  { key:"AVAX", cls:"crypto", name:"آوالانچ", symbol:"A", price:0, change:0, history:[] },
+  { key:"LINK", cls:"crypto", name:"چین‌لینک", symbol:"L", price:0, change:0, history:[] },
+  { key:"ATOM", cls:"crypto", name:"کازموس", symbol:"A", price:0, change:0, history:[] },
+  // بورس ایران - شاخص‌ها
+  { key:"SHETEL", cls:"stock", name:"شاخص کل بورس", symbol:"∑", price:2100000, change:-1.2, history:[2150000,2140000,2130000,2120000,2115000,2110000,2100000] },
+  { key:"SHETEL30", cls:"stock", name:"شاخص ۳۰ شرکت", symbol:"30", price:7800000, change:-0.8, history:[7900000,7880000,7860000,7850000,7840000,7820000,7800000] },
+  { key:"SHETEL_FR", cls:"stock", name:"شاخص فرابورس", symbol:"F", price:21500, change:0.6, history:[21300,21350,21400,21420,21450,21480,21500] },
+  // بورس ایران - فلزات
+  { key:"FEMELI", cls:"stock", name:"ملی صنایع مس ایران (فملی)", symbol:"Cu", price:4800, change:2.5, history:[4620,4650,4680,4700,4740,4770,4800] },
+  { key:"FOLD", cls:"stock", name:"فولاد مبارکه (فولاد)", symbol:"F", price:4200, change:1.8, history:[4080,4100,4120,4140,4160,4180,4200] },
+  { key:"FKHZ", cls:"stock", name:"فولاد خوزستان (فخوز)", symbol:"F", price:5500, change:1.5, history:[5400,5420,5440,5460,5470,5480,5500] },
+  { key:"ZOB", cls:"stock", name:"ذوب آهن اصفهان (ذوب)", symbol:"Z", price:1800, change:-0.5, history:[1815,1812,1810,1808,1805,1803,1800] },
+  { key:"FASMIN", cls:"stock", name:"کالسیمین (فاسمین)", symbol:"Z", price:12500, change:1.2, history:[12300,12350,12400,12430,12450,12480,12500] },
+  { key:"KRAVI", cls:"stock", name:"توسعه معادن روی (کروی)", symbol:"Z", price:2800, change:0.9, history:[2770,2775,2780,2785,2790,2795,2800] },
+  { key:"VEMADEN", cls:"stock", name:"سرمایه‌گذاری معادن (ومعادن)", symbol:"M", price:8500, change:1.1, history:[8400,8420,8440,8450,8460,8480,8500] },
+  // بورس ایران - پتروشیمی و پالایش
+  { key:"SHPNA", cls:"stock", name:"پالایش نفت اصفهان (شپنا)", symbol:"P", price:9200, change:0.6, history:[9050,9080,9100,9130,9150,9180,9200] },
+  { key:"SHTERAN", cls:"stock", name:"پالایش نفت تهران (شتران)", symbol:"P", price:6800, change:0.4, history:[6700,6720,6740,6760,6770,6780,6800] },
+  { key:"SHBNDR", cls:"stock", name:"پالایش نفت بندرعباس (شبندر)", symbol:"P", price:7300, change:0.8, history:[7200,7220,7240,7250,7260,7280,7300] },
+  { key:"FARS", cls:"stock", name:"پتروشیمی فارس (فارس)", symbol:"P", price:4200, change:0.5, history:[4150,4160,4170,4180,4190,4195,4200] },
+  { key:"SHBRIZ", cls:"stock", name:"پتروشیمی تبریز (شبریز)", symbol:"P", price:3200, change:0.7, history:[3150,3160,3170,3180,3185,3190,3200] },
+  { key:"MAROON", cls:"stock", name:"پتروشیمی مارون (مارون)", symbol:"P", price:125000, change:1.1, history:[122000,122500,123000,123500,124000,124500,125000] },
+  // بانکی
+  { key:"VBMELAT", cls:"stock", name:"بانک ملت (وبملت)", symbol:"B", price:3500, change:0.9, history:[3450,3460,3470,3480,3485,3490,3500] },
+  { key:"VTJRAT", cls:"stock", name:"بانک تجارت (وتجارت)", symbol:"B", price:2100, change:0.6, history:[2070,2080,2085,2090,2095,2098,2100] },
+  { key:"VBSADER", cls:"stock", name:"بانک صادرات (وبصادر)", symbol:"B", price:1800, change:0.4, history:[1785,1790,1792,1795,1797,1799,1800] },
+  { key:"VPARS", cls:"stock", name:"بانک پارسیان (وپارس)", symbol:"B", price:2400, change:0.7, history:[2360,2370,2380,2385,2390,2395,2400] },
+  { key:"VPASAR", cls:"stock", name:"پاسارگاد (وپاسار)", symbol:"B", price:4200, change:0.5, history:[4160,4170,4180,4185,4190,4195,4200] },
+  // خودرو
+  { key:"KHODRO", cls:"stock", name:"ایران خودرو (خودرو)", symbol:"K", price:2350, change:1.8, history:[2280,2290,2300,2310,2330,2340,2350] },
+  { key:"KHSAPA", cls:"stock", name:"سایپا (خساپا)", symbol:"K", price:1800, change:2.1, history:[1740,1750,1760,1770,1780,1790,1800] },
+  { key:"KHZAMIA", cls:"stock", name:"زامیاد (خزامیا)", symbol:"K", price:3200, change:1.4, history:[3130,3150,3160,3170,3180,3190,3200] },
+  { key:"KHPARS", cls:"stock", name:"پارس خودرو (خپارس)", symbol:"K", price:2100, change:1.6, history:[2050,2060,2070,2080,2085,2090,2100] },
+  // سیمان
+  { key:"SSEGH", cls:"stock", name:"سیمان شرق (سشرق)", symbol:"S", price:1800, change:0.7, history:[1770,1775,1780,1785,1790,1795,1800] },
+  { key:"SFARS", cls:"stock", name:"سیمان فارس (سفارس)", symbol:"S", price:2300, change:0.5, history:[2280,2285,2288,2290,2292,2295,2300] },
+  { key:"STRAN", cls:"stock", name:"سیمان تهران (ستران)", symbol:"S", price:2100, change:0.6, history:[2080,2085,2088,2090,2093,2096,2100] },
+  // صندوق درآمد ثابت
+  { key:"AFRA", cls:"fund", name:"صندوق افرا (درآمد ثابت)", symbol:"A", price:52000, change:0.3, history:[51800,51850,51900,51950,51980,51990,52000] },
+  { key:"AGAS", cls:"fund", name:"صندوق آگاس (درآمد ثابت)", symbol:"A", price:48500, change:0.2, history:[48300,48350,48400,48420,48450,48480,48500] },
+  { key:"ETEMAD", cls:"fund", name:"صندوق اعتماد (درآمد ثابت)", symbol:"E", price:55000, change:0.3, history:[54800,54850,54900,54930,54950,54980,55000] },
+  { key:"PARAND", cls:"fund", name:"صندوق پارند (درآمد ثابت)", symbol:"P", price:51000, change:0.25, history:[50800,50850,50900,50930,50950,50980,51000] },
+  // صندوق سهامی
+  { key:"KIAN", cls:"fund", name:"صندوق کیان (سهامی)", symbol:"K", price:125000, change:1.4, history:[121000,122000,123000,124000,124500,124800,125000] },
+  { key:"LOTUS", cls:"fund", name:"صندوق لوتوس (سهامی)", symbol:"L", price:98000, change:1.2, history:[95000,95800,96500,97000,97400,97800,98000] },
+  { key:"SARV", cls:"fund", name:"صندوق سرو (سهامی)", symbol:"S", price:112000, change:1.6, history:[108000,109000,110000,110800,111200,111600,112000] },
+  { key:"POOYA", cls:"fund", name:"صندوق پویا (سهامی)", symbol:"P", price:95000, change:1.1, history:[92500,93000,93500,94000,94400,94800,95000] },
+  // صندوق طلا
+  { key:"AYAR", cls:"fund", name:"صندوق عیار (طلا)", symbol:"Au", price:89000, change:0.9, history:[87000,87500,88000,88300,88500,88800,89000] },
+  { key:"GOHAR", cls:"fund", name:"صندوق گوهر (طلا)", symbol:"G", price:92000, change:0.8, history:[90000,90500,91000,91300,91600,91800,92000] },
+  { key:"ZAR", cls:"fund", name:"صندوق زر (طلا)", symbol:"Z", price:85000, change:1.0, history:[83000,83500,84000,84300,84600,84800,85000] },
+  // صندوق مختلط
+  { key:"YAGHUT", cls:"fund", name:"صندوق یاقوت (مختلط)", symbol:"Y", price:75000, change:0.9, history:[73500,74000,74400,74700,74800,74900,75000] },
+  { key:"ASEMAN", cls:"fund", name:"صندوق آسمان (مختلط)", symbol:"A", price:68000, change:0.7, history:[67000,67200,67400,67600,67700,67800,68000] }
+];
+
+/* ═══════════════ LIVE DATA ═══════════════ */
+const LiveData = {
+  crypto: {},
+  paxg: 0,
+  fx: {},
+  usdToman: 0,
+  lastUpdate: 0,
+  status: "idle",
+  errors: []
+};
+
+async function fetchLiveData(force){
+  if (!force && Date.now() - LiveData.lastUpdate < 5*60*1000) return;
+  if (LiveData.status === "loading") return;
+  
+  LiveData.status = "loading";
+  LiveData.errors = [];
+  updateLiveUI();
+  
+  const cryptoIds = Object.keys(CRYPTO_MAP).join(",");
+  const cryptoUrl = "https://api.coingecko.com/api/v3/simple/price?ids=" + cryptoIds + "&vs_currencies=usd&include_24hr_change=true";
+  const fxUrl = "https://api.frankfurter.app/latest?from=USD&to=EUR,GBP,JPY,CNY,TRY,AED";
+  const nobitexUrl = "https://api.nobitex.ir/v2/orderbook/USDTIRT";
+  
+  const [cryptoRes, fxRes, nobitexRes] = await Promise.allSettled([
+    fetch(cryptoUrl).then(r => r.json()),
+    fetch(fxUrl).then(r => r.json()),
+    fetch(nobitexUrl).then(r => r.json())
+  ]);
+  
+  // Crypto
+  if (cryptoRes.status === "fulfilled" && cryptoRes.value) {
+    Object.entries(cryptoRes.value).forEach(([id, d]) => {
+      const key = CRYPTO_MAP[id];
+      if (!key) return;
+      if (key === "PAXG") {
+        LiveData.paxg = d.usd;
+      } else {
+        LiveData.crypto[key] = { usd: d.usd, change: d.usd_24h_change || 0 };
+      }
+    });
+  } else {
+    LiveData.errors.push("crypto");
+  }
+  
+  // FX
+  if (fxRes.status === "fulfilled" && fxRes.value?.rates) {
+    LiveData.fx = fxRes.value.rates;
+  } else {
+    LiveData.errors.push("fx");
+  }
+  
+  // Nobitex (USD/Toman)
+  if (nobitexRes.status === "fulfilled" && nobitexRes.value?.lastTradePrice) {
+    LiveData.usdToman = Math.round(parseInt(nobitexRes.value.lastTradePrice) / 10);
+  } else {
+    LiveData.errors.push("nobitex");
+  }
+  
+  if (LiveData.usdToman > 0) {
+    LiveData.lastUpdate = Date.now();
+    LiveData.status = LiveData.errors.length === 0 ? "loaded" : "partial";
+    Repo.live.save({
+      crypto: LiveData.crypto,
+      paxg: LiveData.paxg,
+      fx: LiveData.fx,
+      usdToman: LiveData.usdToman,
+      lastUpdate: LiveData.lastUpdate
+    });
+    toast("قیمت‌ها به‌روز شد", true);
+  } else {
+    LiveData.status = "error";
+    toast("خطا در اتصال به API", true);
+  }
+  
+  updateLiveUI();
+  render();
+}
+
+function loadCachedLiveData(){
+  const cached = Repo.live.get();
+  if (cached) {
+    LiveData.crypto = cached.crypto || {};
+    LiveData.paxg = cached.paxg || 0;
+    LiveData.fx = cached.fx || {};
+    LiveData.usdToman = cached.usdToman || 0;
+    LiveData.lastUpdate = cached.lastUpdate || 0;
+    LiveData.status = Date.now() - LiveData.lastUpdate < 30*60*1000 ? "loaded" : "stale";
+  }
+}
+
+function manualRefresh(){
+  const btn = document.getElementById("refreshBtn");
+  btn.classList.add("spin");
+  fetchLiveData(true).finally(() => {
+    setTimeout(() => btn.classList.remove("spin"), 500);
+  });
+}
+
+function updateLiveUI(){
+  const el = document.getElementById("liveStatus");
+  if (!el) return;
+  if (LiveData.status === "loading") {
+    el.innerHTML = `<span class="live-badge stale">در حال دریافت...</span>`;
+  } else if (LiveData.status === "loaded" || LiveData.status === "partial") {
+    const t = new Date(LiveData.lastUpdate).toLocaleTimeString("fa-IR", { hour:"2-digit", minute:"2-digit" });
+    el.innerHTML = `<span class="live-badge">زنده · ${t}</span>`;
+  } else if (LiveData.status === "stale") {
+    const t = new Date(LiveData.lastUpdate).toLocaleTimeString("fa-IR", { hour:"2-digit", minute:"2-digit" });
+    el.innerHTML = `<span class="live-badge stale">قدیمی · ${t}</span>`;
+  } else if (LiveData.status === "error") {
+    el.innerHTML = `<span class="live-badge error">خطای اتصال</span>`;
+  }
+}
+
+/* محاسبه قیمت زنده هر دارایی */
+function getLivePrice(item){
+  // رمزارزها
+  if (item.cls === "crypto" && LiveData.crypto[item.key]) {
+    const d = LiveData.crypto[item.key];
+    if (LiveData.usdToman > 0) {
+      return { price: Math.round(d.usd * LiveData.usdToman), change: d.change, source: "CoinGecko" };
+    }
+    return { price: Math.round(d.usd), change: d.change, source: "CoinGecko (USD)", isUSD: true };
+  }
+  
+  // دلار
+  if (item.key === "USD" && LiveData.usdToman > 0) {
+    return { price: LiveData.usdToman, change: item.change || 0, source: "Nobitex" };
+  }
+  
+  // طلای ۱۸ عیار (از PAXG)
+  if (item.key === "GOLD18" && LiveData.paxg && LiveData.usdToman > 0) {
+    // PAXG = 1 troy ounce. 18K = 75%
+    const gram24 = LiveData.paxg / 31.1035;
+    const gram18 = gram24 * 0.75;
+    return { price: Math.round(gram18 * LiveData.usdToman), change: 0, source: "محاسبه از PAXG" };
+  }
+  
+  // مثقال (4.6083 گرم)
+  if (item.key === "MESGHAL" && LiveData.paxg && LiveData.usdToman > 0) {
+    const gram18 = (LiveData.paxg / 31.1035) * 0.75;
+    return { price: Math.round(gram18 * 4.6083 * LiveData.usdToman), change: 0, source: "محاسبه از PAXG" };
+  }
+  
+  // سکه امامی (۸.۱۳۳ گرم، عیار ۹۰۰)
+  if (item.key === "COIN" && LiveData.paxg && LiveData.usdToman > 0) {
+    const gram24 = LiveData.paxg / 31.1035;
+    const coinGold = gram24 * 0.9 * 8.133;
+    // ضریب پریمیوم سکه
+    return { price: Math.round(coinGold * LiveData.usdToman * 1.15), change: 0, source: "محاسبه از PAXG" };
+  }
+  
+  // سایر ارزها
+  if (item.cls === "currency" && LiveData.fx[item.key] && LiveData.usdToman > 0) {
+    const usdPerUnit = 1 / LiveData.fx[item.key];
+    return { price: Math.round(usdPerUnit * LiveData.usdToman), change: 0, source: "Frankfurter" };
+  }
+  
+  // Fallback
+  return { price: item.price, change: item.change, source: "نمایشی" };
+}
+
+/* ═══════════════ STATE ═══════════════ */
+let state = {
+  tab: "dashboard",
+  marketTab: "fav",
+  portfolioFilter: "all",
+  editingAssetId: null,
+  assets: Repo.assets.getAll(),
+  favorites: Repo.favorites.getAll(),
+  settings: Repo.settings.getAll(),
+  history: Repo.history.getAll(),
+  chat: Repo.chat.getAll()
+};
+
+function seedAssets(){
+  const now = Date.now(), d = 86400000;
+  return [
+    { id:"a1", cls:"GOLD", name:"طلای ۱۸ عیار", quantity:35, unit:"گرم", unitPrice:3450000, amount:120750000, note:"", createdAt:now-d*45, unitPriceHistory:[{t:now-d*45,v:3100000},{t:now-d*30,v:3250000},{t:now,v:3450000}] },
+    { id:"a2", cls:"CRYPTO", name:"بیت‌کوین", quantity:0.018, unit:"واحد", unitPrice:4444444444, amount:80000000, note:"", createdAt:now-d*30, unitPriceHistory:[{t:now-d*30,v:4000000000},{t:now,v:4500000000}] },
+    { id:"a3", cls:"STOCK", name:"فولاد مبارکه", quantity:10714, unit:"سهم", unitPrice:4200, amount:45000000, note:"", createdAt:now-d*20, unitPriceHistory:[{t:now-d*20,v:4200},{t:now,v:4800}] },
+    { id:"a4", cls:"DEPOSIT", name:"سپرده بانکی", quantity:1, unit:"—", unitPrice:40000000, amount:40000000, note:"", createdAt:now-d*60, unitPriceHistory:[] },
+    { id:"a5", cls:"CURRENCY", name:"دلار آمریکا", quantity:27, unit:"واحد", unitPrice:925925, amount:25000000, note:"", createdAt:now-d*15, unitPriceHistory:[{t:now-d*15,v:870000},{t:now,v:920000}] }
+  ];
+}
+function seedHistory(){
+  const d = 86400000, n = Date.now();
+  return [210,218,225,240,258,290,310,295,308,320,315,326].map((v,i)=>({t:n-d*(11-i),v:v*1000000}));
+}
+function saveAll(){
+  Repo.assets.save(state.assets);
+  Repo.favorites.save(state.favorites);
+  Repo.settings.save(state.settings);
+  Repo.history.save(state.history);
+  Repo.chat.save(state.chat);
+}
+
+/* ═══════════════ HELPERS ═══════════════ */
+const FA = "۰۱۲۳۴۵۶۷۸۹";
+const fa = n => String(n).replace(/\d/g, d => FA[d]);
+const faNum = n => fa(Number(n).toLocaleString("en-US"));
+function escapeHtml(t){ return String(t||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function toman(n){
+  if (n >= 1e9) return (n/1e9).toFixed(2).replace(/\d/g,d=>FA[d]) + " میلیارد";
+  if (n >= 1e6) return (n/1e6).toFixed(1).replace(/\d/g,d=>FA[d]) + " میلیون";
+  if (n >= 1e3) return (n/1e3).toFixed(0).replace(/\d/g,d=>FA[d]) + " هزار";
+  return faNum(n);
+}
+function pct(p){
+  if (p === null || isNaN(p)) return "—";
+  const s = p >= 0 ? "▲" : "▼";
+  return s + " " + Math.abs(p).toFixed(2).replace(/\d/g,d=>FA[d]) + "٪";
+}
+function cls(key){ return ASSET_CLASSES.find(c=>c.key===key) || ASSET_CLASSES[7]; }
+function uid(){ return "x"+Date.now()+Math.random().toString(36).slice(2,7); }
+function toast(msg, gold){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = "show" + (gold?" gold":"");
+  clearTimeout(t._h);
+  t._h = setTimeout(()=>t.className="", 2400);
+}
+function sparkline(data, color){
+  if (!data || data.length < 2) return "";
+  const w = 48, h = 24, pad = 2;
+  const min = Math.min(...data), max = Math.max(...data);
+  const range = max - min || 1;
+  const pts = data.map((v,i) => {
+    const x = pad + (i/(data.length-1)) * (w - 2*pad);
+    const y = h - pad - ((v - min)/range) * (h - 2*pad);
+    return x.toFixed(1) + "," + y.toFixed(1);
+  }).join(" ");
+  return `<svg class="sparkline" viewBox="0 0 ${w} ${h}"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+function bigSparkline(data, color, w, h){
+  if (!data || data.length < 2) return "";
+  const pad = 3;
+  const min = Math.min(...data), max = Math.max(...data);
+  const range = max - min || 1;
+  const pts = data.map((v,i) => {
+    const x = pad + (i/(data.length-1)) * (w - 2*pad);
+    const y = h - pad - ((v - min)/range) * (h - 2*pad);
+    return x.toFixed(1) + "," + y.toFixed(1);
+  }).join(" ");
+  return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:${h}px"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+function donut(segments){
+  const total = segments.reduce((s,x)=>s+x.value,0) || 1;
+  const r = 42, cx = 55, cy = 55, c = 2*Math.PI*r;
+  let offset = 0;
+  const arcs = segments.map(seg => {
+    const len = (seg.value/total) * c;
+    const arc = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${seg.color}" stroke-width="14" stroke-dasharray="${len} ${c-len}" stroke-dashoffset="${-offset}"/>`;
+    offset += len;
+    return arc;
+  }).join("");
+  return `<svg viewBox="0 0 110 110">${arcs}</svg>`;
+}
+
+function calcMonthlyChange(asset){
+  if (!asset.unitPriceHistory || asset.unitPriceHistory.length < 2) return null;
+  const now = Date.now();
+  const monthAgo = now - 30*86400000;
+  const oldRec = asset.unitPriceHistory.filter(p => p.t <= monthAgo).pop() || asset.unitPriceHistory[0];
+  if (!oldRec || !oldRec.v) return null;
+  return ((asset.unitPrice - oldRec.v) / oldRec.v) * 100;
+}
+
+/* سیگنال هوشمند */
+function generateSignal(item){
+  const live = getLivePrice(item);
+  const h = item.history || [];
+  if (h.length < 3) return { action:"hold", conf:"پایین", reasons:["داده کافی برای تحلیل موجود نیست"], source: live.source };
+  
+  const change = live.change || 0;
+  const recent = h.slice(-3);
+  const trend = (recent[2] - recent[0]) / recent[0] * 100;
+  const volatility = Math.max(...h) - Math.min(...h);
+  const volPct = (volatility / Math.min(...h)) * 100;
+  
+  const reasons = [];
+  let action = "hold";
+  let conf = "متوسط";
+  
+  if (change > 1 && trend > 0.5) {
+    action = "buy";
+    reasons.push(`رشد ${change.toFixed(1)}٪ در ۲۴ ساعت گذشته`);
+    reasons.push(`روند صعودی ${trend.toFixed(1)}٪ در ۳ روز اخیر`);
+    if (volPct > 5) reasons.push(`نوسان ${volPct.toFixed(1)}٪ — با احتیاط وارد شوید`);
+    else reasons.push("نوسان ملایم و پایدار");
+  } else if (change < -1 && trend < -0.5) {
+    action = "sell";
+    reasons.push(`افت ${Math.abs(change).toFixed(1)}٪ در ۲۴ ساعت گذشته`);
+    reasons.push(`روند نزولی ${Math.abs(trend).toFixed(1)}٪ در ۳ روز اخیر`);
+    reasons.push("احتمال ادامه روند نزولی");
+  } else {
+    action = "hold";
+    reasons.push("روند خنثی و بدون جهت مشخص");
+    reasons.push(`نوسان محدود ${volPct.toFixed(1)}٪ در هفته اخیر`);
+    reasons.push("منتظر سیگنال واضح‌تر بمانید");
+  }
+  
+  const strength = Math.abs(change) + Math.abs(trend);
+  if (strength > 5) conf = "بالا";
+  else if (strength > 2) conf = "متوسط";
+  else conf = "پایین";
+  
+  return { action, conf, reasons, source: live.source, date: new Date().toLocaleDateString("fa-IR") };
+}
+function signalLabel(a){ return a==="buy"?"خرید":a==="sell"?"فروش":"نگه‌داشتن"; }
+
+/* ═══════════════ THEME ═══════════════ */
+function applyTheme(){
+  document.documentElement.setAttribute("data-theme", state.settings.theme);
+  const btn = document.getElementById("themeBtn");
+  if (btn) btn.innerHTML = `<svg><use href="#ic-${state.settings.theme==="dark"?"sun":"moon"}"/></svg>`;
+}
+function toggleTheme(){
+  state.settings.theme = state.settings.theme === "dark" ? "light" : "dark";
+  applyTheme(); saveAll();
+}
+
+/* ═══════════════ BOOT ═══════════════ */
+loadCachedLiveData();
+setTimeout(() => {
+  document.getElementById("splash").classList.add("hide");
+  setTimeout(() => document.getElementById("loginPage").classList.add("show"), 400);
+}, 1800);
+
+function enterApp(){
+  document.getElementById("loginPage").classList.remove("show");
+  document.getElementById("app").classList.add("show");
+  render();
+  // شروع دریافت داده زنده
+  fetchLiveData();
+  // بروزرسانی خودکار هر ۵ دقیقه
+  setInterval(() => fetchLiveData(), 5*60*1000);
+}
+
+/* ═══════════════ NAV ═══════════════ */
+function renderNav(){
+  document.getElementById("bottomNav").innerHTML = NAV_ITEMS.map(n => `
+    <button class="nav-item ${state.tab===n.key?'active':''}" onclick="goTab('${n.key}')">
+      <svg><use href="#${n.icon}"/></svg><span>${n.fa}</span>
+    </button>
+  `).join("");
+}
+function goTab(k){ state.tab = k; window.scrollTo({top:0,behavior:"smooth"}); render(); }
+
+/* ═══════════════ RENDER ═══════════════ */
+function render(){
+  renderNav();
+  const c = document.getElementById("mainContent");
+  const sub = document.getElementById("appbarSub");
+  switch (state.tab) {
+    case "dashboard": sub.textContent = "دستیار هوشمند مدیریت ثروت"; c.innerHTML = renderDashboard(); break;
+    case "markets":   sub.textContent = "بازارهای مالی"; c.innerHTML = renderMarkets(); break;
+    case "portfolio": sub.textContent = "سبد دارایی‌های شما"; c.innerHTML = renderPortfolio(); break;
+    case "settings":  sub.textContent = "تنظیمات و ابزارها"; c.innerHTML = renderSettings(); break;
+  }
+  updateLiveUI();
+}
+
+/* ═══════════════ DASHBOARD ═══════════════ */
+function renderDashboard(){
+  const total = state.assets.reduce((s,a)=>s+a.amount,0);
+  const cash = state.settings.cashAvailable || 0;
+  const salary = state.settings.salary || 0;
+  const healthScore = calcHealthScore();
+  const hist30 = state.history.slice(-12);
+  const first = hist30[0]?.v || 1;
+  const last = hist30[hist30.length-1]?.v || 0;
+  const monthChange = ((last - first) / first) * 100;
+  
+  return `
+    <div class="card dark">
+      <div class="card-head">
+        <div class="card-title">ارزش کل ثروت</div>
+        <div id="liveStatus"></div>
+      </div>
+      <div class="total-value">${toman(total)}<span class="cur">تومان</span></div>
+      <div class="total-change ${monthChange<0?'down':''}">${pct(monthChange)} این ماه</div>
+      <div style="margin-top:12px">${bigSparkline(hist30.map(h=>h.v), "#22C55E", 300, 44)}</div>
+    </div>
+    <div class="card">
+      <div class="health-card">
+        <div class="health-ring">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="var(--border)" stroke-width="8"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="var(--green)" stroke-width="8" stroke-dasharray="${(healthScore/100)*264} 264" stroke-linecap="round"/>
+          </svg>
+          <div class="score">${fa(healthScore)}</div>
+        </div>
+        <div class="health-info">
+          <div class="label">شاخص سلامت مالی</div>
+          <div class="desc">${healthDesc(healthScore)}</div>
+        </div>
+      </div>
+    </div>
+    <div class="card gold">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+        <div class="cmd-icon"><svg width="18" height="18"><use href="#ic-target"/></svg></div>
+        <div style="font-size:12px;font-weight:700;color:var(--gold)">مرکز فرماندهی</div>
+      </div>
+      <div class="cmd-text">${commandCenterAdvice(total, cash, salary)}</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box editable" onclick="openModal('cashModal');document.getElementById('fCash').value='${cash}'">
+        <div class="lbl">سرمایه نقدی</div>
+        <div class="val">${toman(cash)}</div>
+        <div class="sub">قابل سرمایه‌گذاری · ویرایش</div>
+      </div>
+      <div class="stat-box editable" onclick="openModal('salaryModal');document.getElementById('fSalary').value='${salary}'">
+        <div class="lbl">حقوق ماهانه</div>
+        <div class="val">${toman(salary)}</div>
+        <div class="sub">تومان · ویرایش</div>
+      </div>
+    </div>
+    <div class="quick-grid">
+      <button class="quick-item gold" onclick="goTab('markets')"><div class="qicon"><svg><use href="#ic-trend"/></svg></div><div class="qlabel">بازارها</div></button>
+      <button class="quick-item green" onclick="goTab('portfolio')"><div class="qicon"><svg><use href="#ic-wallet"/></svg></div><div class="qlabel">دارایی‌ها</div></button>
+      <button class="quick-item blue" onclick="openAI()"><div class="qicon"><svg><use href="#ic-chat"/></svg></div><div class="qlabel">تحلیل‌گر</div></button>
+      <button class="quick-item" onclick="goTab('settings')"><div class="qicon"><svg><use href="#ic-shield"/></svg></div><div class="qlabel">بکاپ</div></button>
+    </div>
+    <div class="section-head">
+      <h2>علاقه‌مندی‌ها</h2>
+      <a onclick="openFavManager()">مدیریت <svg width="14" height="14"><use href="#ic-sort"/></svg></a>
+    </div>
+    ${state.favorites.slice(0,3).map(k => {
+      const m = MARKET_DATA.find(x=>x.key===k);
+      return m ? renderAssetRow(m, false) : "";
+    }).join("")}
+    <div class="section-head">
+      <h2>دارایی‌های من</h2>
+      <a onclick="goTab('portfolio')">مشاهده همه</a>
+    </div>
+    ${state.assets.slice(0,3).map(a => renderPortfolioRow(a)).join("")}
+  `;
+}
+function calcHealthScore(){
+  let score = 40;
+  const count = state.assets.length;
+  if (count >= 3) score += 10;
+  if (count >= 5) score += 10;
+  const classes = new Set(state.assets.map(a=>a.cls)).size;
+  if (classes >= 3) score += 15;
+  if (classes >= 5) score += 10;
+  if (state.settings.cashAvailable > 0) score += 10;
+  if (state.settings.salary > 0) score += 5;
+  return Math.min(score, 98);
+}
+function healthDesc(s){
+  if (s >= 80) return "وضعیت مالی عالی — ادامه بده";
+  if (s >= 60) return "وضعیت خوب — قابل بهبود";
+  return "نیاز به توجه و تنوع بیشتر";
+}
+function commandCenterAdvice(total, cash, salary){
+  const classes = new Set(state.assets.map(a=>a.cls)).size;
+  if (classes < 3) return "سبد دارایی شما تنوع کافی ندارد. پیشنهاد می‌کنم بین حداقل ۳ کلاس مختلف پخش کنید.";
+  if (cash > 0) return `${toman(cash)} تومان سرمایه نقدی دارید. پیشنهاد می‌کنم بخشی را در طلا و بخشی را در صندوق‌های درآمد ثابت سرمایه‌گذاری کنید.`;
+  return "برای شروع سرمایه‌گذاری، ابتدا سرمایه نقدی خود را در داشبورد وارد کنید.";
+}
+
+/* ═══════════════ MARKETS ═══════════════ */
+function renderMarkets(){
+  const tabs = MARKET_TABS.map(t => `
+    <button class="tab ${state.marketTab===t.key?'active':''}" onclick="setMarketTab('${t.key}')">
+      ${t.icon?`<svg><use href="#${t.icon}"/></svg>`:""}${t.fa}
+    </button>
+  `).join("");
+  let list = [];
+  if (state.marketTab === "fav") list = MARKET_DATA.filter(m => state.favorites.includes(m.key));
+  else list = MARKET_DATA.filter(m => m.cls === state.marketTab);
+  const listHtml = list.length
+    ? list.map(m => renderAssetRow(m, true)).join("")
+    : `<div class="empty"><div class="empty-icon"><svg><use href="#ic-star"/></svg></div><div class="empty-title">لیست خالی است</div><div class="empty-text">${state.marketTab==="fav"?"با ستاره کردن دارایی‌ها، به اینجا اضافه می‌شوند":"به‌زودی..."}</div></div>`;
+  const liveInfo = LiveData.status === "loaded" || LiveData.status === "partial"
+    ? `<div class="card green" style="padding:10px 14px;margin-bottom:12px"><div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-2)"><span class="live-badge">زنده</span><span>قیمت‌ها از منابع معتبر (CoinGecko · Frankfurter · Nobitex)</span></div></div>`
+    : `<div class="card gold" style="padding:10px 14px;margin-bottom:12px"><div style="font-size:11px;color:var(--text-2)">📊 برای دریافت قیمت‌های زنده، دکمه به‌روزرسانی بالا را بزنید یا اتصال اینترنت خود را بررسی کنید.</div></div>`;
+  return `${liveInfo}<div class="tabs">${tabs}</div>${listHtml}`;
+}
+function setMarketTab(k){ state.marketTab = k; render(); }
+
+function renderAssetRow(m, showStar){
+  const isFav = state.favorites.includes(m.key);
+  const live = getLivePrice(m);
+  const up = live.change >= 0;
+  const clsInfo = ASSET_CLASSES.find(c=>c.key===m.cls);
+  const color = up ? "var(--green)" : "var(--red)";
+  const sig = generateSignal(m);
+  const priceText = live.isUSD ? `$${Number(live.price).toLocaleString("en-US")}` : `${toman(live.price)} تومان`;
+  return `
+    <div class="asset-row" onclick="showSignalDetail('${m.key}')">
+      <div class="asset-icon ${clsInfo?.color||''}">${m.symbol}</div>
+      <div class="asset-info">
+        <div class="asset-name">${escapeHtml(m.name)}</div>
+        <div class="asset-meta">
+          ${priceText}
+          <span class="signal-badge ${sig.action}">${signalLabel(sig.action)}</span>
+        </div>
+      </div>
+      ${sparkline(m.history, color)}
+      <div class="asset-right">
+        <div class="asset-price">${pct(live.change)}</div>
+      </div>
+      ${showStar ? `<button class="star-btn ${isFav?'active':''}" onclick="event.stopPropagation();toggleFav('${m.key}')"><svg><use href="#ic-${isFav?'star-fill':'star'}"/></svg></button>` : ""}
+    </div>
+  `;
+}
+function toggleFav(key){
+  const i = state.favorites.indexOf(key);
+  if (i >= 0) state.favorites.splice(i,1);
+  else state.favorites.push(key);
+  saveAll(); render();
+  toast(i>=0 ? "از علاقه‌مندی‌ها حذف شد" : "به علاقه‌مندی‌ها اضافه شد", true);
+}
+
+function showSignalDetail(key){
+  const m = MARKET_DATA.find(x=>x.key===key);
+  if (!m) return;
+  const live = getLivePrice(m);
+  const sig = generateSignal(m);
+  const priceText = live.isUSD ? `$${Number(live.price).toLocaleString("en-US")}` : `${toman(live.price)} تومان`;
+  const html = `
+    <h3 style="margin-bottom:6px">${escapeHtml(m.name)}</h3>
+    <div style="font-size:13px;color:var(--text-2);margin-bottom:16px">${priceText} · <span style="color:${live.change>=0?'var(--green)':'var(--red)'}">${pct(live.change)}</span></div>
+    <div class="signal-head">
+      <span class="s-badge ${sig.action}">${signalLabel(sig.action)}</span>
+      <span class="s-conf">اطمینان: ${sig.conf}</span>
+    </div>
+    <div style="font-size:12px;color:var(--text-2);font-weight:700;margin-bottom:8px">دلایل این تحلیل:</div>
+    <div class="reason-list">${sig.reasons.map(r=>`<div class="reason-item">${escapeHtml(r)}</div>`).join("")}</div>
+    <div class="signal-source">
+      <span>منبع: ${escapeHtml(sig.source)}</span>
+      <span>${escapeHtml(sig.date)}</span>
+    </div>
+  `;
+  document.getElementById("signalDetailContent").innerHTML = html;
+  openModal("signalModal");
+}
+
+/* ═══════════════ PORTFOLIO ═══════════════ */
+function renderPortfolio(){
+  const total = state.assets.reduce((s,a)=>s+a.amount,0);
+  const grouped = {};
+  state.assets.forEach(a => { grouped[a.cls] = (grouped[a.cls] || 0) + a.amount; });
+  const colorMap = { CURRENCY:"#22C55E", GOLD:"#D4A537", CRYPTO:"#F7931A", STOCK:"#19376D", FUND:"#8B5CF6", DEPOSIT:"#0EA5E9", PROPERTY:"#EAB308", OTHER:"#6B7280" };
+  const segments = Object.entries(grouped).map(([k,v]) => ({ key:k, value:v, color:colorMap[k]||"#6B7280", label:cls(k).fa })).sort((a,b)=>b.value-a.value);
+  const legend = segments.slice(0,4).map(s => `
+    <div class="legend-row">
+      <div class="legend-dot" style="background:${s.color}"></div>
+      <div class="legend-name">${s.label}</div>
+      <div class="legend-val">${((s.value/total)*100).toFixed(0).replace(/\d/g,d=>FA[d])}٪</div>
+    </div>
+  `).join("");
+  const filterClasses = ["all", ...new Set(state.assets.map(a=>a.cls))];
+  const chips = filterClasses.map(k => {
+    const label = k === "all" ? "همه" : cls(k).fa;
+    return `<button class="tab ${state.portfolioFilter===k?'active':''}" onclick="setPortfolioFilter('${k}')">${label}</button>`;
+  }).join("");
+  const filtered = state.portfolioFilter === "all" ? state.assets : state.assets.filter(a => a.cls === state.portfolioFilter);
+  const listHtml = filtered.length
+    ? filtered.map(a => renderPortfolioRow(a)).join("")
+    : `<div class="empty"><div class="empty-icon"><svg><use href="#ic-wallet"/></svg></div><div class="empty-title">هنوز دارایی‌ای ثبت نشده</div><div class="empty-text">با دکمه + اضافه کن</div></div>`;
+  return `
+    <div class="card dark">
+      <div class="card-title">ارزش کل سبد</div>
+      <div class="total-value">${toman(total)}<span class="cur">تومان</span></div>
+    </div>
+    ${state.assets.length > 0 ? `
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px">توزیع دارایی</div>
+        <div class="donut-wrap">
+          <div class="donut">${donut(segments)}<div class="donut-center"><div class="val">${faNum(state.assets.length)}</div><div class="lbl">دارایی</div></div></div>
+          <div class="donut-legend">${legend}</div>
+        </div>
+      </div>
+    ` : ""}
+    <div class="section-head">
+      <h2>لیست دارایی‌ها</h2>
+      <a onclick="openAssetModal()"><svg width="16" height="16"><use href="#ic-plus"/></svg>افزودن</a>
+    </div>
+    ${state.assets.length > 0 ? `<div class="tabs">${chips}</div>` : ""}
+    ${listHtml}
+  `;
+}
+function setPortfolioFilter(k){ state.portfolioFilter = k; render(); }
+
+function renderPortfolioRow(a){
+  const c = cls(a.cls);
+  const change = calcMonthlyChange(a);
+  const chgHtml = change === null
+    ? `<div class="asset-chg" style="color:var(--text-3);font-size:10px">در انتظار داده</div>`
+    : `<div class="asset-chg ${change>=0?'up':'down'}">${pct(change)}</div>`;
+  return `
+    <div class="asset-row" onclick="editAsset('${a.id}')">
+      <div class="asset-icon ${c.color}">${c.icon}</div>
+      <div class="asset-info">
+        <div class="asset-name">${escapeHtml(a.name)}</div>
+        <div class="asset-meta">${c.fa} · ${faNum(a.quantity)} ${escapeHtml(a.unit)}</div>
+      </div>
+      <div class="asset-right">
+        <div class="asset-price">${toman(a.amount)}</div>
+        ${chgHtml}
+      </div>
+    </div>
+  `;
+}
+
+/* ═══════════════ SETTINGS ═══════════════ */
+function renderSettings(){
+  const lastUpdateText = LiveData.lastUpdate
+    ? new Date(LiveData.lastUpdate).toLocaleString("fa-IR")
+    : "هنوز دریافت نشده";
+  return `
+    <div class="card">
+      <div class="card-title">ظاهر</div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="tab ${state.settings.theme==='light'?'active':''}" style="flex:1;justify-content:center" onclick="setTheme('light')">روشن</button>
+        <button class="tab ${state.settings.theme==='dark'?'active':''}" style="flex:1;justify-content:center" onclick="setTheme('dark')">تیره</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">وضعیت داده‌های زنده</div>
+      <div style="margin-top:8px;font-size:12px;color:var(--text-2);line-height:2">
+        آخرین بروزرسانی: <strong style="color:var(--text)">${lastUpdateText}</strong><br>
+        نرخ دلار (Nobitex): <strong style="color:var(--text)">${LiveData.usdToman ? toman(LiveData.usdToman) + " تومان" : "دریافت نشده"}</strong><br>
+        منابع: CoinGecko · Frankfurter · Nobitex
+      </div>
+      <button class="btn gold" style="margin-top:10px" onclick="manualRefresh()"><svg><use href="#ic-refresh"/></svg>به‌روزرسانی دستی</button>
+    </div>
+    <div class="card">
+      <div class="card-title">سرمایه نقدی قابل سرمایه‌گذاری</div>
+      <div style="font-size:20px;font-weight:800;margin:8px 0">${toman(state.settings.cashAvailable)} تومان</div>
+      <button class="btn ghost small" onclick="openModal('cashModal');document.getElementById('fCash').value='${state.settings.cashAvailable}'"><svg><use href="#ic-edit"/></svg>ویرایش</button>
+    </div>
+    <div class="card">
+      <div class="card-title">حقوق ماهانه</div>
+      <div style="font-size:20px;font-weight:800;margin:8px 0">${toman(state.settings.salary)} تومان</div>
+      <button class="btn ghost small" onclick="openModal('salaryModal');document.getElementById('fSalary').value='${state.settings.salary}'"><svg><use href="#ic-edit"/></svg>ویرایش</button>
+    </div>
+    <div class="card">
+      <div class="card-title">بکاپ و بازیابی</div>
+      <div style="margin-top:10px">
+        <button class="btn gold" onclick="doExport()"><svg><use href="#ic-download"/></svg>خروجی JSON</button>
+        <button class="btn ghost" onclick="openModal('importModal')"><svg><use href="#ic-upload"/></svg>بازیابی از فایل</button>
+        <button class="btn danger" onclick="doReset()"><svg><use href="#ic-trash"/></svg>بازنشانی کامل</button>
+      </div>
+    </div>
+    <div class="card gold">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <div class="cmd-icon"><svg width="18" height="18"><use href="#ic-crown"/></svg></div>
+        <div style="font-weight:700;color:var(--gold)">نسخه Premium</div>
+      </div>
+      <div style="font-size:12px;color:var(--text-2);line-height:1.8">هشدار قیمت، بکاپ ابری، تحلیل پیشرفته، خروجی PDF.</div>
+      <button class="btn gold" style="margin-top:12px" onclick="toast('به‌زودی...', true)">به‌زودی</button>
+    </div>
+    <div class="card">
+      <div class="card-title">درباره</div>
+      <div style="font-size:12px;color:var(--text-2);line-height:2;margin-top:8px">
+        نسخه: ۳.۰.۰ · فاز ۳ (API زنده)<br>
+        توسعه‌دهنده: امین یزدخواستی<br>
+        © ۱۴۰۴ تمام حقوق محفوظ است
+      </div>
+    </div>
+  `;
+}
+function setTheme(t){ state.settings.theme = t; applyTheme(); saveAll(); render(); }
+
+/* ═══════════════ MODALS ═══════════════ */
+function openModal(id){ document.getElementById(id).classList.add("show"); }
+function closeModal(id){ document.getElementById(id).classList.remove("show"); }
+document.querySelectorAll(".modal-bg").forEach(m => {
+  m.addEventListener("click", e => { if (e.target === m) m.classList.remove("show"); });
+});
+function saveCash(){
+  const v = parseInt(document.getElementById("fCash").value.replace(/\D/g,""), 10);
+  if (!v || v < 0) return toast("عدد نامعتبر", true);
+  state.settings.cashAvailable = v;
+  saveAll(); closeModal("cashModal"); render();
+  toast("سرمایه نقدی به‌روز شد", true);
+}
+function saveSalary(){
+  const v = parseInt(document.getElementById("fSalary").value.replace(/\D/g,""), 10);
+  if (!v || v < 0) return toast("عدد نامعتبر", true);
+  state.settings.salary = v;
+  saveAll(); closeModal("salaryModal"); render();
+  toast("حقوق به‌روز شد", true);
+}
+
+/* ═══════════════ ASSET MODAL ═══════════════ */
+function openAssetModal(){
+  state.editingAssetId = null;
+  document.getElementById("assetModalTitle").textContent = "افزودن دارایی";
+  document.getElementById("fClass").innerHTML = ASSET_CLASSES.map(c => `<option value="${c.key}">${c.fa}</option>`).join("");
+  document.getElementById("fName").value = "";
+  document.getElementById("fQty").value = "";
+  document.getElementById("fUnit").value = "گرم";
+  document.getElementById("fUnitPrice").value = "";
+  document.getElementById("fNote").value = "";
+  openModal("assetModal");
+}
+function editAsset(id){
+  const a = state.assets.find(x => x.id === id);
+  if (!a) return;
+  state.editingAssetId = id;
+  document.getElementById("assetModalTitle").textContent = "ویرایش دارایی";
+  document.getElementById("fClass").innerHTML = ASSET_CLASSES.map(c => `<option value="${c.key}" ${c.key===a.cls?'selected':''}>${c.fa}</option>`).join("");
+  document.getElementById("fName").value = a.name;
+  document.getElementById("fQty").value = a.quantity;
+  document.getElementById("fUnit").value = a.unit;
+  document.getElementById("fUnitPrice").value = a.unitPrice;
+  document.getElementById("fNote").value = a.note || "";
+  openModal("assetModal");
+}
+function saveAsset(){
+  const clsK = document.getElementById("fClass").value;
+  const name = document.getElementById("fName").value.trim();
+  const quantity = parseFloat(document.getElementById("fQty").value.replace(/[^\d.]/g,"")) || 1;
+  const unit = document.getElementById("fUnit").value.trim() || "واحد";
+  const unitPrice = parseInt(document.getElementById("fUnitPrice").value.replace(/\D/g,""), 10);
+  const note = document.getElementById("fNote").value.trim();
+  if (!name) return toast("نام را وارد کنید", true);
+  if (!unitPrice || unitPrice <= 0) return toast("قیمت واحد را وارد کنید", true);
+  const amount = Math.round(quantity * unitPrice);
+  if (state.editingAssetId) {
+    const a = state.assets.find(x => x.id === state.editingAssetId);
+    if (a) {
+      a.cls = clsK; a.name = name; a.note = note;
+      a.quantity = quantity; a.unit = unit; a.unitPrice = unitPrice; a.amount = amount;
+      a.unitPriceHistory = a.unitPriceHistory || [];
+      a.unitPriceHistory.push({ t: Date.now(), v: unitPrice });
+    }
+    toast("ویرایش شد", true);
+  } else {
+    state.assets.push({
+      id: uid(), cls: clsK, name, quantity, unit, unitPrice, amount, note,
+      createdAt: Date.now(),
+      unitPriceHistory: [{ t: Date.now(), v: unitPrice }]
+    });
+    toast("افزودن موفق", true);
+  }
+  saveAll(); closeModal("assetModal"); render();
+}
+
+/* ═══════════════ FAVORITES ═══════════════ */
+function openFavManager(){
+  const list = document.getElementById("favList");
+  if (state.favorites.length === 0) {
+    list.innerHTML = `<div class="empty"><div class="empty-title">لیست خالی است</div><div class="empty-text">با ستاره کردن دارایی‌ها، به اینجا اضافه می‌شوند</div></div>`;
+  } else {
+    list.innerHTML = state.favorites.map((k, i) => {
+      const m = MARKET_DATA.find(x=>x.key===k);
+      if (!m) return "";
+      const live = getLivePrice(m);
+      return `
+        <div class="asset-row" style="margin-bottom:8px">
+          <div class="asset-icon ${m.cls}">${m.symbol}</div>
+          <div class="asset-info">
+            <div class="asset-name">${escapeHtml(m.name)}</div>
+            <div class="asset-meta">${toman(live.price)} تومان</div>
+          </div>
+          <button class="star-btn" onclick="moveFav(${i},-1)" ${i===0?'disabled':''} style="opacity:${i===0?0.3:1}"><svg><use href="#ic-up"/></svg></button>
+          <button class="star-btn" onclick="moveFav(${i},1)" ${i===state.favorites.length-1?'disabled':''} style="opacity:${i===state.favorites.length-1?0.3:1}"><svg><use href="#ic-down"/></svg></button>
+          <button class="star-btn" onclick="removeFav('${k}')"><svg><use href="#ic-close"/></svg></button>
+        </div>
+      `;
+    }).join("");
+  }
+  openModal("favModal");
+}
+function moveFav(i, dir){
+  const j = i + dir;
+  if (j < 0 || j >= state.favorites.length) return;
+  [state.favorites[i], state.favorites[j]] = [state.favorites[j], state.favorites[i]];
+  saveAll(); openFavManager();
+}
+function removeFav(k){
+  state.favorites = state.favorites.filter(x => x !== k);
+  saveAll(); openFavManager(); render();
+}
+
+/* ═══════════════ BACKUP ═══════════════ */
+function doExport(){
+  const data = {
+    version: "3.0", exportedAt: new Date().toISOString(),
+    owner: "Amin Yazdkhasti", app: "MarketDeskAI",
+    assets: state.assets, history: state.history,
+    favorites: state.favorites, settings: state.settings, chat: state.chat
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `marketdeskai-backup-${Date.now()}.json`;
+  a.click();
+  toast("دانلود شد", true);
+}
+function doImport(){
+  const raw = document.getElementById("importData").value.trim();
+  if (!raw) return toast("داده‌ای وارد نشده", true);
+  try {
+    const d = JSON.parse(raw);
+    if (Array.isArray(d.assets)) state.assets = d.assets;
+    if (Array.isArray(d.history)) state.history = d.history;
+    if (Array.isArray(d.favorites)) state.favorites = d.favorites;
+    if (d.settings) state.settings = { ...state.settings, ...d.settings };
+    if (Array.isArray(d.chat)) state.chat = d.chat;
+    saveAll(); closeModal("importModal"); render();
+    toast("بازیابی موفق", true);
+  } catch(e) { toast("JSON نامعتبر", true); }
+}
+function doReset(){
+  if (!confirm("تمام داده‌ها پاک شود؟")) return;
+  localStorage.clear(); location.reload();
+}
+
+/* ═══════════════ AI ═══════════════ */
+const QUICK_QUESTIONS = ["تحلیل دارایی‌های من","وضعیت مالی من چطوره؟","پیشنهاد سرمایه‌گذاری","چقدر پس‌انداز کنم؟","مقایسه طلا و بیت‌کوین","خلاصه وضعیت مالی"];
+function openAI(){
+  document.getElementById("aiPanel").classList.add("show");
+  renderChat();
+  setTimeout(() => document.getElementById("aiInput").focus(), 300);
+}
+function closeAI(){ document.getElementById("aiPanel").classList.remove("show"); }
+function renderChat(){
+  const box = document.getElementById("aiMessages");
+  if (state.chat.length === 0) {
+    box.innerHTML = `<div class="msg bot">سلام 👋\nمن تحلیل‌گر مالی MarketDeskAI هستم.\nمی‌توانم دارایی‌ها، بودجه و وضعیت مالی شما را تحلیل کنم.\nیک سؤال بپرس یا از دکمه‌های پایین استفاده کن.</div>`;
+  } else {
+    box.innerHTML = state.chat.map(m => `<div class="msg ${m.role}">${escapeHtml(m.text)}</div>`).join("");
+  }
+  document.getElementById("aiQuick").innerHTML = QUICK_QUESTIONS.map(q => `<button class="quick-q" onclick="quickAsk('${q}')">${q}</button>`).join("");
+  box.scrollTop = box.scrollHeight;
+}
+function quickAsk(q){ document.getElementById("aiInput").value = q; sendAI(); }
+function sendAI(){
+  const inp = document.getElementById("aiInput");
+  const text = inp.value.trim();
+  if (!text) return;
+  state.chat.push({ role:"user", text });
+  state.chat.push({ role:"bot", text: analyze(text) });
+  inp.value = "";
+  saveAll(); renderChat();
+}
+function analyze(q){
+  const l = q.toLowerCase();
+  const total = state.assets.reduce((s,a)=>s+a.amount, 0);
+  const count = state.assets.length;
+  const classes = new Set(state.assets.map(a=>a.cls)).size;
+  const cash = state.settings.cashAvailable || 0;
+  const salary = state.settings.salary || 0;
+  if (l.includes("تحلیل دارایی") || l.includes("دارایی من")) {
+    if (count === 0) return "هنوز دارایی‌ای ثبت نکرده‌اید. از تب «دارایی‌ها» با دکمه + شروع کنید.";
+    const sorted = [...state.assets].sort((a,b)=>b.amount-a.amount);
+    const grouped = {};
+    state.assets.forEach(a => { grouped[a.cls] = (grouped[a.cls]||0) + a.amount; });
+    const top = Object.entries(grouped).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    const lines = top.map(([k,v]) => `• ${cls(k).fa}: ${toman(v)} (${((v/total)*100).toFixed(1)}٪)`).join("\n");
+    return `📊 تحلیل دارایی‌های شما:\n\nارزش کل: ${toman(total)} تومان\nتعداد: ${faNum(count)}\nتنوع: ${faNum(classes)} کلاس\nبزرگ‌ترین: ${sorted[0].name}\n\nتوزیع:\n${lines}\n\n${classes >= 3 ? "✅ تنوع سبد مناسب است." : "⚠️ پیشنهاد می‌کنم سبد را متنوع‌تر کنید."}`;
+  }
+  if (l.includes("وضعیت مالی") || l.includes("خلاصه")) {
+    return `📋 خلاصه وضعیت مالی:\n\n💰 ارزش کل دارایی: ${toman(total)} تومان\n💵 سرمایه نقدی: ${toman(cash)} تومان\n📊 دارایی‌ها: ${faNum(count)}\n🎯 تنوع: ${faNum(classes)} کلاس\n💼 حقوق ماهانه: ${toman(salary)} تومان\n\n${classes >= 3 ? "✅ وضعیت مالی شما در مسیر درست است." : "⚠️ برای بهبود، سبد را متنوع‌تر کنید."}`;
+  }
+  if (l.includes("پیشنهاد") || l.includes("سرمایه")) {
+    const base = cash > 0 ? cash : Math.round(salary * 0.30);
+    return `🎯 پیشنهاد سرمایه‌گذاری:\n\nسرمایه قابل استفاده: ${toman(base)} تومان\n\nتوزیع پیشنهادی:\n   • ۴۰٪ طلا و فلزات\n   • ۲۵٪ ارز (دلار/یورو)\n   • ۲۰٪ سهام یا صندوق\n   • ۱۵٪ رمزارز\n\nقبل از هر خرید، بازار مربوطه را در تب «بازارها» بررسی کنید و سیگنال‌ها را ببینید.\n\n⚠️ این تحلیل صرفاً جنبه اطلاع‌رسانی دارد.`;
+  }
+  if (l.includes("پس‌انداز") || l.includes("کنار")) {
+    return `💎 پیشنهاد پس‌انداز:\n\nحداقل: ${toman(Math.round(salary*0.20))} تومان (۲۰٪)\nپیشنهادی: ${toman(Math.round(salary*0.30))} تومان (۳۰٪)\nایده‌آل: ${toman(Math.round(salary*0.40))} تومان (۴۰٪)\n\nسرمایه نقدی فعلی: ${toman(cash)} تومان`;
+  }
+  if (l.includes("طلا") && l.includes("بیت")) {
+    const g = MARKET_DATA.find(m=>m.key==="GOLD18");
+    const b = MARKET_DATA.find(m=>m.key==="BTC");
+    const gLive = getLivePrice(g), bLive = getLivePrice(b);
+    return `⚖️ مقایسه طلا و بیت‌کوین:\n\n🥇 طلا ۱۸ عیار: ${toman(gLive.price)} تومان\nتغییر: ${pct(gLive.change)}\nریسک: پایین\n\n₿ بیت‌کوین: ${toman(bLive.price)} تومان\nتغییر: ${pct(bLive.change)}\nریسک: بالا\n\n📌 ${bLive.change > gLive.change ? "بیت‌کوین بازدهی بیشتری داشته، اما ریسک آن چند برابر است. برای سبد متعادل: ۷۰٪ طلا، ۳۰٪ رمزارز." : "طلا عملکرد پایدارتری داشته و برای شرایط فعلی منطقی‌تر است."}`;
+  }
+  return "می‌توانم در این موارد کمک کنم:\n\n• تحلیل دارایی‌های من\n• وضعیت مالی من چطوره؟\n• پیشنهاد سرمایه‌گذاری\n• چقدر پس‌انداز کنم؟\n• مقایسه طلا و بیت‌کوین\n• خلاصه وضعیت مالی";
+}
+
+/* ═══════════════ SERVICE WORKER ═══════════════ */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js").catch(() => {});
+  });
+}
+
+/* ═══════════════ INIT ═══════════════ */
+applyTheme();
+</script>
+</body>
+</html>
